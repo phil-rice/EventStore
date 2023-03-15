@@ -1,0 +1,23 @@
+{
+  "template":    "springboot",
+  "name":        "events",
+  "description": "Name / Value and Event store",
+  "mvn":         {
+    "project": {
+      "dependencies": {
+        "dependency": [
+          {"groupId": "${group}", "artifactId": "utils", "version": "${version}"},
+          {"groupId": "${group}", "artifactId": "values", "version": "${version}"},
+          {"groupId": "${group}", "artifactId": "optics", "version": "${version}"}
+        ]
+      }
+    }
+  },
+  "links":       ["values", "optics"],
+  "guards":      {
+    "mvn":     true,
+    "compile": true,
+    "publish": false,
+    "test":    true
+  }
+}

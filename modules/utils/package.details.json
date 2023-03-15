@@ -1,0 +1,13 @@
+{
+  "template":    "springboot",
+  "name":        "utils",
+  "description": "Those miscellaneous utilities that don't fit anywhere else",
+
+  "links":       [],
+  "guards":      {
+    "mvn":     true,
+    "compile": true,
+    "publish": false,
+    "test":    true
+  }
+}

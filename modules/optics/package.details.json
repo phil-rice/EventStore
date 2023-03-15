@@ -1,0 +1,21 @@
+{
+  "template":    "springboot",
+  "name":        "optics",
+  "description": "Lens library for Java",
+  "mvn":         {
+    "project": {
+      "dependencies": {
+        "dependency": [
+          {"groupId": "${group}", "artifactId": "utils", "version":  "${version}"}
+        ]
+      }
+    }
+  },
+  "links":       ["utils"],
+  "guards":      {
+    "mvn":     true,
+    "compile": true,
+    "publish": false,
+    "test":    true
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "packageManager": "yarn",
+  "parents":        [
+    "@laoban@/laoban.json/core.laoban.json",
+    "@laoban@/laoban.json/javascript.laoban.json",
+    "@laoban@/laoban.json/typescript.laoban.json",
+    "@laoban@/laoban.json/typescript.publish.laoban.json",
+    "@laoban@/laoban.json/react.laoban.json",
+    "@laoban@/laoban.json/mvn.laoban.json"
+  ],
+  "properties":     {
+    "license":    "MIT",
+    "repository": "git@github.com:srebootcamp/sre-bootcamp.git"
+  },
+  "templates":      {
+    "springboot": "@laoban@/templates/springboot_302"
+  },
+  "variables":      {
+    "group": "dev.srebootcamp"
+  },
+  "defaultEnv":     {
+    "NPM_TOKEN": ""
+  },
+  "scripts":        {
+    "ls-endpoints": {
+      "description":  "lists all the projects with an endpoint",
+      "inLinksOrder": true,
+      "commands":     [
+        {
+          "guard":   "${packageDetails.sre.port}",
+          "command": "js:process.cwd().padEnd(60) + '${packageDetails.sre.verb}'.padEnd(7) + '${packageDetails.sre.port}'.padEnd(6) + '   ${packageDetails.sre.endpoint}'.padEnd(30) + '${packageDetails.sre.dockerName}:latest'"
+        }
+      ]
+    },
+    "run-apis":     {
+      "description": "Runs the spring boot servers (the jar must exist in /target...",
+      "guard":       "${packageDetails.sre.port}",
+      "commands":    [
+        {
+          "name":    "run-apis",
+          "command": "java -jar  .\\target\\${packageDetails.name}-${version}.jar --server.port=${packageDetails.sre.port}"
+        }
+      ]
+    },
+    "docker-build": {
+      "description":  "Compiles the docker image",
+      "guard":        "${packageDetails.sre.port}",
+      "inLinksOrder": true,
+      "commands":     [
+        {
+          "name":    "docker-build",
+          "command": "docker build  -t ${packageDetails.name|toSnakeCase}:${version} -t ${packageDetails.name|toSnakeCase}:latest -f dockerfile --build-arg JAR_FILE=target/${packageDetails.name}-${version}.jar .",
+          "status":  true
+        }
+      ]
+    },
+    "docker-run":   {
+      "description": "Runs the docker image",
+      "guard":       "${packageDetails.sre.port}",
+      "commands":    [
+        {
+          "name":    "docker-run",
+          "command": "docker run -p ${packageDetails.sre.port}:${packageDetails.sre.port} ${packageDetails.sre.dockerName}:latest",
+          "status":  true
+        }
+      ]
+    }
+  }
+}
