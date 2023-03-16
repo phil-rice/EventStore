@@ -5,11 +5,7 @@
   "mvn":         {
     "project": {
       "dependencies": {
-        "dependency": [
-          {"groupId": "${group}", "artifactId": "utils", "version": "${version}"},
-          {"groupId": "${group}", "artifactId": "values", "version": "${version}"},
-          {"groupId": "${group}", "artifactId": "optics", "version": "${version}"}
-        ]
+        "dependency": []
       }
     }
   },

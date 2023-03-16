@@ -17,6 +17,7 @@ target/
 *.status
 *.log
 .cache/
+.session/
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/

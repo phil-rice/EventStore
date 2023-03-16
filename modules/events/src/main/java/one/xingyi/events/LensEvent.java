@@ -1,7 +1,7 @@
 package one.xingyi.events;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import one.xingyi.events.lens.LensDefn;
+import one.xingyi.optics.lens.LensDefn;
 import one.xingyi.events.utils.JsonHelper;
 
 public record LensEvent(LensDefn lefnsDefn, String value, String parser, Audit audit) implements IEvent {

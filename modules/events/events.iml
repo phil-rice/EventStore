@@ -88,8 +88,8 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-jcl:6.0.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-test:6.0.4" level="project" />
     <orderEntry type="library" name="Maven: org.xmlunit:xmlunit-core:2.9.1" level="project" />
-    <orderEntry type="module" module-name="utils" />
     <orderEntry type="module" module-name="values" />
+    <orderEntry type="module" module-name="utils" />
     <orderEntry type="module" module-name="optics" />
   </component>
 </module>

@@ -8,10 +8,10 @@
     <relativePath></relativePath>
   </parent>
   <groupId>dev.srebootcamp</groupId>
-  <artifactId>events</artifactId>
+  <artifactId>eventProcessor</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <name>events</name>
-  <description>Name / Value and Event store</description>
+  <name>eventProcessor</name>
+  <description>Processes events: effectively left folds them into a start value</description>
   <properties>
     <java.version>17</java.version>
     <rest.assured.version>5.3.0</rest.assured.version>
@@ -28,12 +28,7 @@
     </dependency>
     <dependency>
       <groupId>dev.srebootcamp</groupId>
-      <artifactId>values</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.srebootcamp</groupId>
-      <artifactId>optics</artifactId>
+      <artifactId>events</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
   </dependencies>

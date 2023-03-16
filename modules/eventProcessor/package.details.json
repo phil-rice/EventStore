@@ -1,16 +1,16 @@
 {
   "template":    "springboot",
-  "name":        "values",
-  "description": "id / value / identity",
+  "name":        "eventProcessor",
+  "description": "Processes events: effectively left folds them into a start value",
   "mvn":         {
     "project": {
       "dependencies": {
         "dependency": [
-               ]
+        ]
       }
     }
   },
-  "links":       ["utils"],
+  "links":       ["events"],
   "guards":      {
     "mvn":     true,
     "compile": true,

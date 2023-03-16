@@ -6,8 +6,7 @@
     "project": {
       "dependencies": {
         "dependency": [
-          {"groupId": "${group}", "artifactId": "utils", "version":  "${version}"}
-        ]
+          ]
       }
     }
   },
