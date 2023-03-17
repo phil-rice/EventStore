@@ -11,10 +11,8 @@ import static one.xingyi.events.events.LensEventFixture.abc;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LensEventTest {
-    Audit audit1 = new Audit("who1", "when1", "what1");
 
-    LensEvent lensEvent = new LensEvent(new LensDefn("a.b.c"), "3", "json", audit1);
-
+    LensEvent lensEvent = new LensEvent("a.b.c", "3", "json");
 
 
     @Test
@@ -24,7 +22,7 @@ class LensEventTest {
 
     @Test
     public void testLensEventLensDefn() {
-        assertEquals(LensEventFixture.abc4, lensEvent.lefnsDefn().jsonLens().set(abc, 4));
+        assertEquals(LensEventFixture.abc4, new LensDefn(lensEvent.lens()).jsonLens().set(abc, 4));
     }
 
 }

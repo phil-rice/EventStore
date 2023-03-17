@@ -6,11 +6,11 @@
     "project": {
       "dependencies": {
         "dependency": [
-        ]
+         ]
       }
     }
   },
-  "links":       ["events"],
+  "links":       ["events", "eventFixture"],
   "guards":      {
     "mvn":     true,
     "compile": true,

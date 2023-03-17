@@ -1,0 +1,19 @@
+{
+  "template":    "springboot",
+  "name":        "eventStore",
+  "description": "Abstraction for eventStore that stores and retrieves events for some name/namespace",
+  "mvn":         {
+    "project": {
+      "dependencies": {
+        "dependency": []
+      }
+    }
+  },
+  "links":       ["events", "eventFixture"],
+  "guards":      {
+    "mvn":     true,
+    "compile": true,
+    "publish": false,
+    "test":    true
+  }
+}

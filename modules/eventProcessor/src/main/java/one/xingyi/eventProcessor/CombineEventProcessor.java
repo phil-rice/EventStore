@@ -1,34 +1,29 @@
 package one.xingyi.eventProcessor;
 
-import one.xingyi.events.IEvent;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-public final class CombineEventProcessor<T> implements IEventProcessor<T> {
-    private final List<IEventProcessor<T>> eventProcessors;
+public final class CombineEventProcessor<E,T> implements IEventProcessor<E, T> {
+    private final List<IEventProcessor<E, T>> eventProcessors;
 
-    public CombineEventProcessor(List<IEventProcessor<T>> eventProcessors) {
+    public CombineEventProcessor(List<IEventProcessor<E, T>> eventProcessors) {
         this.eventProcessors = eventProcessors;
     }
 
     @Override
-    public boolean canProcess(IEvent event) {
+    public boolean canProcess(E event) {
         return eventProcessors.stream().anyMatch(eventProcessor -> eventProcessor.canProcess(event));
     }
 
     @Override
-    public CompletableFuture<T> apply(T value, IEvent event) {
+    public CompletableFuture<T> apply(T value, E event) {
         for (IEventProcessor eventProcessor : eventProcessors)
             if (eventProcessor.canProcess(event))
                 return eventProcessor.apply(value, event);
         throw new RuntimeException("No event processor found for event " + event);
     }
 
-    public List<IEventProcessor<T>> eventProcessors() {
-        return eventProcessors;
-    }
 
     @Override
     public boolean equals(Object obj) {

@@ -15,10 +15,9 @@ target/
 *.ipr
 *.profile
 *.status
-*.log
 .cache/
 .session/
-
+store/
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 

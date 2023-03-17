@@ -1,6 +1,6 @@
 package one.xingyi.eventProcessor.value;
 
-import one.xingyi.eventProcessor.EventProcessorFixture;
+import one.xingyi.eventFixture.EventProcessorFixture;
 import one.xingyi.events.utils.JsonHelper;
 import one.xingyi.optics.lens.ILensTC;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LensEventValueProcessorTest {
 

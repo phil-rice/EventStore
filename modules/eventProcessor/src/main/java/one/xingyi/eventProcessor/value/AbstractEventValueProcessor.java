@@ -5,7 +5,7 @@ import one.xingyi.events.IEvent;
 
 import java.util.concurrent.CompletableFuture;
 
-public abstract class AbstractEventValueProcessor<E extends IEvent, T> implements IEventProcessor<T> {
+public abstract class AbstractEventValueProcessor<E extends IEvent, T> implements IEventProcessor<IEvent, T> {
     private final Class<E> eClass;
 
     protected AbstractEventValueProcessor(Class<E> eClass) {

@@ -1,0 +1,19 @@
+{
+  "template":    "springboot",
+  "name":        "api",
+  "description": "api with endpoints for event and id/value storage/retrieval",
+  "mvn":         {
+    "project": {
+      "dependencies": {
+        "dependency": []
+      }
+    }
+  },
+  "links":       ["eventProcessor", "eventStore"],
+  "guards":      {
+    "mvn":     true,
+    "compile": true,
+    "publish": false,
+    "test":    true
+  }
+}

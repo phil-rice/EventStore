@@ -3,6 +3,7 @@ package one.xingyi.eventProcessor.value;
 import one.xingyi.events.LensEvent;
 import one.xingyi.events.utils.BiFunctionWithException;
 import one.xingyi.optics.lens.ILensTC;
+import one.xingyi.optics.lens.LensDefn;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -19,7 +20,7 @@ public class LensEventValueProcessor<T> extends AbstractEventValueProcessor<Lens
 
     @Override
     protected CompletableFuture<T> applyEvent(LensEvent event, T value) {
-        var lens = event.lefnsDefn().asLens(lensTC);
+        var lens = new LensDefn(event.lens()).asLens(lensTC);
         try {
             return CompletableFuture.completedFuture(lens.set(value, parser.apply(event.parser(), event.value())));
         } catch (Exception e) {

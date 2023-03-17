@@ -1,0 +1,19 @@
+{
+  "template":    "springboot",
+  "name":        "eventFixture",
+  "description": "Shared test fixture",
+  "mvn":         {
+    "project": {
+      "dependencies": {
+        "dependency": []
+      }
+    }
+  },
+  "links":       ["events"],
+  "guards":      {
+    "mvn":     true,
+    "compile": true,
+    "publish": false,
+    "test":    true
+  }
+}

@@ -18,4 +18,10 @@ public interface ListHelper {
         result.add(t);
         return result;
     }
+
+    static <T, T1, E extends Exception> ArrayList<T1> map(List<T> list, FunctionWithException<T, T1, E> lineToT) throws E {
+        var result = new ArrayList<T1>(list.size());
+        for (T t : list) result.add(lineToT.apply(t));
+        return result;
+    }
 }
