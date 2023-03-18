@@ -19,7 +19,7 @@ public class ApiConfig {
 
     @Bean
     IEventStore store() {
-        return FileEventStore.store(executor, "store", File.separator, 2, 2, 2);
+        return FileEventStore.store(executor, "fileStore", File.separator, 2, 2, 2);
     }
 
     @Bean
