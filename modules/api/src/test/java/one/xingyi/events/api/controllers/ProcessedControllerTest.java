@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -37,12 +38,10 @@ class ProcessedControllerTest {
     @BeforeEach
     void setup() {
         new IntegrationTestContext();
-        var count = new AtomicLong();
         eventStore = new MapEventStore();
         idAndValue = new IdAndValueMemoryStore();
         controller = new ProcessedController(idAndValue, eventStore);
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-
     }
 
     @Test
@@ -50,17 +49,17 @@ class ProcessedControllerTest {
         eventStore.appendEvent("ns", "name", evA1).join();
         MockMvcHelper.performAsync(mockMvc,
                 m -> m.perform(get("/processed/ns/name").contentType("application/json")),
-                m -> m.andExpect(status().isOk()).andExpect(content().string(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 1, "b", 2)))))));
+                m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 1, "b", 2)))))));
 
         eventStore.appendEvent("ns", "name", evA2).join();
         MockMvcHelper.performAsync(mockMvc,
                 m -> m.perform(get("/processed/ns/name").contentType("application/json")),
-                m -> m.andExpect(status().isOk()).andExpect(content().string(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 2, "b", 3)))))));
+                m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 2, "b", 3)))))));
 
         eventStore.appendEvent("ns", "name", evA1).join();
         MockMvcHelper.performAsync(mockMvc,
                 m -> m.perform(get("/processed/ns/name").contentType("application/json")),
-                m -> m.andExpect(status().isOk()).andExpect(content().string(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 1, "b", 2)))))));
+                m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 1, "b", 2)))))));
     }
 
     @Test
@@ -69,7 +68,7 @@ class ProcessedControllerTest {
         eventStore.appendEvent("ns", "name", evA4).join();
         MockMvcHelper.performAsync(mockMvc,
                 m -> m.perform(get("/processed/ns/name").contentType("application/json")),
-                m -> m.andExpect(status().isOk()).andExpect(content().string(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 44, "b", 3)))))));
+                m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 44, "b", 3)))))));
     }
 
     @Test
@@ -77,14 +76,14 @@ class ProcessedControllerTest {
         Audit audit = new Audit("user", 0, "test");
         var metadata = new Metadata("json", "application/json", audit);
         var pr = idAndValue.put(new ValueAndMetadata(
-                JsonHelper.printJson(Map.of("a", 1, "b", 2)).getBytes("UTF-8"), metadata)).join();
+                JsonHelper.printJson(Map.of("a", 1, "b", 2)).getBytes(StandardCharsets.UTF_8), metadata)).join();
 
         var ev = new AndAudit<IEvent>(new SetIdEvent(pr.id(), "json"), audit);
         eventStore.appendEvent("ns", "name", ev).join();
 
         MockMvcHelper.performAsync(mockMvc,
                 m -> m.perform(get("/processed/ns/name").contentType("application/json")),
-                m -> m.andExpect(status().isOk()).andExpect(content().string(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 1, "b", 2)))))));
+                m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 1, "b", 2)))))));
     }
 
 }
