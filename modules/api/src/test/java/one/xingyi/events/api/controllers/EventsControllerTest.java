@@ -50,13 +50,13 @@ class EventsControllerTest {
     @Test
     public void testOneAppendAndGetEvents() throws Exception {
         MockMvcHelper.performAsync(mockMvc,
-                m -> m.perform(post("/events/ns/name").contentType("application/json").content(JsonHelper.printJson(new EventAndWhy(zeroEvent, "why")))),
+                m -> m.perform(post("/events/ns/name").contentType("application/json").content(JsonHelper.printJson(zeroEvent))),
                 m -> m.andExpect(status().isOk()));
 
         String expected = JsonHelper.printJson(
                 Map.of("name", Map.of("ns", List.of(
                         Map.of("payload", Map.of("type", "zero"),
-                                "audit", Map.of("who", "anonymous", "when", 0, "what", "why"))
+                                "audit", Map.of("who", "anonymous", "when", 0, "what", "unknown"))
                 ))));
 
         MockMvcHelper.performAsync(mockMvc,

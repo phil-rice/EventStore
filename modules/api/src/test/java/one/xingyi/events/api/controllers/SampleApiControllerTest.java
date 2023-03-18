@@ -45,10 +45,10 @@ class SampleApiControllerTest {
     public void testGetNumberedSample() throws Exception {
         MockMvcHelper.performAsync(mockMvc,
                 m -> m.perform(get("/sampleEvent/0")),
-                m -> m.andExpect(status().isOk()).andExpect(content().string(JsonHelper.printJson(new EventAndWhy(zeroEvent, "sample")))));
+                m -> m.andExpect(status().isOk()).andExpect(content().string(JsonHelper.printJson(zeroEvent))));
         MockMvcHelper.performAsync(mockMvc,
                 m -> m.perform(get("/sampleEvent/1")),
-                m -> m.andExpect(status().isOk()).andExpect(content().string(JsonHelper.printJson(new EventAndWhy(valueEvent1, "sample")))));
+                m -> m.andExpect(status().isOk()).andExpect(content().string(JsonHelper.printJson(valueEvent1))));
     }
 
 
