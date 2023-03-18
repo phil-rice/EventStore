@@ -30,15 +30,19 @@ public interface JsonHelper {
     static BiFunctionWithException<String, String, Object, Exception> toJsonParser =
             (p, s) -> {
                 if (p != "json") throw new RuntimeException("Unknown parser " + p);
-                return JsonHelper.toJson(s);
+                return JsonHelper.parseJson(s);
             };
 
-    static Object toJson(String value) throws JsonProcessingException {
+    static Object parseJson(String value) throws JsonProcessingException {
         if (value.matches("^\\d+$")) return Integer.parseInt(value);
         if (value.matches("^\\d+.\\d+$")) return Double.parseDouble(value);
         if (value.matches("^\".*\"$")) return mapper.readValue(value, String.class);
         if (value.startsWith("[")) return mapper.readValue(value, List.class);
         if (value.startsWith("{")) return mapper.readValue(value, Object.class);
         throw new RuntimeException("Unknown json " + value);
+    }
+
+    static String printJson(Object object) {
+        return WrappedException.wrapFn(mapper::writeValueAsString).apply(object);
     }
 }

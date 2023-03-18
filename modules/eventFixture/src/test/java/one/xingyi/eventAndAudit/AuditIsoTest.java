@@ -1,15 +1,20 @@
-package one.xingyi.eventStore;
+package one.xingyi.eventAndAudit;
 
-import one.xingyi.events.EventAndAudit;
-import one.xingyi.events.IEventParserPrinter;
+import one.xingyi.audit.AndAudit;
+import one.xingyi.audit.AuditIso;
+import one.xingyi.events.IEvent;
+import one.xingyi.optics.iso.IIso;
 import org.junit.jupiter.api.Test;
 
 import static one.xingyi.eventFixture.EventProcessorFixture.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class IEventParserPrinterTest {
-    EventAndAudit roundTrip(EventAndAudit event) {
-        return IEventParserPrinter.iso.to(IEventParserPrinter.iso.from(event));
+class AuditIsoTest {
+
+    IIso<String, AndAudit<IEvent>> iso = AuditIso.iso(IIso.jsonIso(IEvent.class));
+
+    AndAudit<IEvent> roundTrip(AndAudit<IEvent> event) {
+        return iso.to(iso.from(event));
     }
 
     @Test

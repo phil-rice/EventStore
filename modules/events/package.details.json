@@ -9,7 +9,7 @@
       }
     }
   },
-  "links":       ["values", "optics"],
+  "links":       ["optics"],
   "guards":      {
     "mvn":     true,
     "compile": true,

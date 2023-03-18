@@ -1,0 +1,19 @@
+{
+  "template":    "springboot",
+  "name":        "idValueStore",
+  "description": "Abstraction for content address id/value store (the id is the sha256 of the byte[] value)",
+  "mvn":         {
+    "project": {
+      "dependencies": {
+        "dependency": []
+      }
+    }
+  },
+  "links":       ["utils",  "audit"],
+  "guards":      {
+    "mvn":     true,
+    "compile": true,
+    "publish": false,
+    "test":    true
+  }
+}

@@ -1,4 +1,4 @@
-package one.xingyi.events.api.domain;
+package one.xingyi.audit;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.MultiValueMap;

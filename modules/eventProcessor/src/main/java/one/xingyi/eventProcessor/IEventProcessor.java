@@ -1,12 +1,12 @@
 package one.xingyi.eventProcessor;
 
+import one.xingyi.audit.AndAudit;
+import one.xingyi.audit.Audit;
 import one.xingyi.eventProcessor.audit.EventAuditProcessor;
 import one.xingyi.eventProcessor.value.LensEventValueProcessor;
 import one.xingyi.eventProcessor.value.SetIdEventValueProcessor;
 import one.xingyi.eventProcessor.value.SetValueEventValueProcessor;
 import one.xingyi.eventProcessor.value.ZeroEventValueProcessor;
-import one.xingyi.events.Audit;
-import one.xingyi.events.EventAndAudit;
 import one.xingyi.events.IEvent;
 import one.xingyi.events.utils.AsyncHelper;
 import one.xingyi.optics.iso.IIso;
@@ -50,7 +50,7 @@ public interface IEventProcessor<E, T> {
         return new MergeEventProcessor<>(one, two, iso);
     }
 
-    static IEventProcessor<EventAndAudit, List<Audit>> auditEventProcessor() {
+    static IEventProcessor<AndAudit<IEvent>, List<Audit>> auditEventProcessor() {
         return new EventAuditProcessor();
     }
 

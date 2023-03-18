@@ -28,10 +28,10 @@ class JsonHelperTest {
 
     @Test
     public void testToJson() throws JsonProcessingException {
-        assertEquals("a", JsonHelper.toJson("\"a\""));
-        assertEquals(1, JsonHelper.toJson("1"));
-        assertEquals(1.0d, JsonHelper.toJson("1.0"));
-        assertEquals(List.of(1, 2, 3), JsonHelper.toJson("[1,2,3]"));
-        assertEquals(Map.of("a", 1, "b", 2, "c", 3), JsonHelper.toJson("{'a':1,'b':2,'c':3}".replace('\'', '"')));
+        assertEquals("a", JsonHelper.parseJson("\"a\""));
+        assertEquals(1, JsonHelper.parseJson("1"));
+        assertEquals(1.0d, JsonHelper.parseJson("1.0"));
+        assertEquals(List.of(1, 2, 3), JsonHelper.parseJson("[1,2,3]"));
+        assertEquals(Map.of("a", 1, "b", 2, "c", 3), JsonHelper.parseJson("{'a':1,'b':2,'c':3}".replace('\'', '"')));
     }
 }

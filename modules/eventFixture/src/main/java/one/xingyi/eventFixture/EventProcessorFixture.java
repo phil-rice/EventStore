@@ -1,6 +1,8 @@
 package one.xingyi.eventFixture;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import one.xingyi.audit.AndAudit;
+import one.xingyi.audit.Audit;
 import one.xingyi.events.*;
 import one.xingyi.events.utils.JsonHelper;
 
@@ -28,17 +30,17 @@ public interface EventProcessorFixture {
     LensEvent lensEvent4 = new LensEvent("a", "44", "json");
     List<IEvent> events01234 = List.of(zeroEvent, valueEvent1, valueEvent2, idEvent3, lensEvent4);
 
-    EventAndAudit evA0 = new EventAndAudit(zeroEvent, audit0);
-    EventAndAudit evA1 = new EventAndAudit(valueEvent1, audit1);
-    EventAndAudit evA2 = new EventAndAudit(valueEvent2, audit2);
-    EventAndAudit evA3 = new EventAndAudit(idEvent3, audit3);
-    EventAndAudit evA4 = new EventAndAudit(lensEvent4, audit4);
-    List<EventAndAudit> evA01234 = List.of(evA0, evA1, evA2, evA3, evA4);
+    AndAudit<IEvent> evA0 = new AndAudit<IEvent>(zeroEvent, audit0);
+    AndAudit<IEvent> evA1 = new AndAudit<IEvent>(valueEvent1, audit1);
+    AndAudit<IEvent> evA2 = new AndAudit<IEvent>(valueEvent2, audit2);
+    AndAudit<IEvent> evA3 = new AndAudit<IEvent>(idEvent3, audit3);
+    AndAudit<IEvent> evA4 = new AndAudit<IEvent>(lensEvent4, audit4);
+    List<AndAudit<IEvent>> evA01234 = List.of(evA0, evA1, evA2, evA3, evA4);
 
 
     static Function<String, CompletableFuture<Object>> idToValue = s -> {
         try {
-            if (s.equals("id3")) return CompletableFuture.completedFuture(JsonHelper.toJson(value(3)));
+            if (s.equals("id3")) return CompletableFuture.completedFuture(JsonHelper.parseJson(value(3)));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

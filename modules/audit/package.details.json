@@ -1,16 +1,15 @@
 {
   "template":    "springboot",
-  "name":        "values",
-  "description": "id / value / identity",
+  "name":        "audit",
+  "description": "Audit data",
   "mvn":         {
     "project": {
       "dependencies": {
-        "dependency": [
-               ]
+        "dependency": []
       }
     }
   },
-  "links":       ["utils"],
+  "links":       [ "optics"],
   "guards":      {
     "mvn":     true,
     "compile": true,

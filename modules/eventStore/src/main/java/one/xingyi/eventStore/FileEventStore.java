@@ -1,56 +1,55 @@
 package one.xingyi.eventStore;
 
-import one.xingyi.events.EventAndAudit;
-import one.xingyi.events.IEventParserPrinter;
+import one.xingyi.audit.AndAudit;
+import one.xingyi.audit.AuditIso;
+import one.xingyi.events.IEvent;
+import one.xingyi.events.utils.AsyncHelper;
 import one.xingyi.events.utils.FilesHelper;
 import one.xingyi.events.utils.StringHelper;
 import one.xingyi.optics.iso.IIso;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 
 public class FileEventStore implements IEventStore {
+    static Logger logger = LoggerFactory.getLogger(FileEventStore.class);
+    private Executor executor;
     public final BiFunction<String, String, String> nameAndNameSpaceToFileName;
-    private IIso<String, EventAndAudit> iso;
 
-    public static FileEventStore store(String dir, String separator, int... pattern) {
-        return new FileEventStore(FileEventStore.nameAndNameSpaceToFileName(dir, separator, pattern), IEventParserPrinter.iso);
+    public static FileEventStore store(Executor executor, String dir, String separator, int... pattern) {
+        return new FileEventStore(executor, FileEventStore.nameAndNameSpaceToFileName(dir, separator, pattern), defaultIso);
     }
+
+    public static IIso<String, AndAudit<IEvent>> defaultIso = AuditIso.iso(IIso.jsonIso(IEvent.class));
+    private final IIso<String, AndAudit<IEvent>> iso;
+
 
     public static BiFunction<String, String, String> nameAndNameSpaceToFileName(String dir, String separator, int... pattern) {
         var toDir = StringHelper.asDirectories(separator, pattern);
         return (ns, n) -> String.join(separator, List.of(dir, ns, toDir.apply(StringHelper.sha256(n)), n)) + ".dat";
     }
 
-    public FileEventStore(BiFunction<String, String, String> nameAndNameSpaceToFileName, IIso<String, EventAndAudit> iso) {
+    public FileEventStore(Executor executor, BiFunction<String, String, String> nameAndNameSpaceToFileName, IIso<String, AndAudit<IEvent>> iso) {
+        this.executor = executor;
         this.nameAndNameSpaceToFileName = nameAndNameSpaceToFileName;
         this.iso = iso;
     }
 
     @Override
-    public CompletableFuture<List<EventAndAudit>> getEvents(String nameSpace, String name) {
-        try {
-            List<EventAndAudit> events = FilesHelper.getLines(nameAndNameSpaceToFileName.apply(nameSpace, name), l -> iso.to(l));
-            return CompletableFuture.completedFuture(events);
-        } catch (NoSuchFileException e) {
-            return CompletableFuture.completedFuture(List.of());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public CompletableFuture<List<AndAudit<IEvent>>> getEvents(String nameSpace, String name) {
+        return AsyncHelper.wrapSupplier(executor, () -> FilesHelper.getLines(nameAndNameSpaceToFileName.apply(nameSpace, name), iso::to));
     }
 
     @Override
-    public CompletableFuture<Void> appendEvent(String nameSpace, String name, EventAndAudit eventAndAudit) {
-        try {
-            String fileName = nameAndNameSpaceToFileName.apply(nameSpace, name);
-            FilesHelper.writeLineToFile(fileName, iso.from(eventAndAudit));
-            return CompletableFuture.completedFuture(null);
-        } catch (IOException e) {
-            return CompletableFuture.failedFuture(e);
-        }
+    public CompletableFuture<Void> appendEvent(String nameSpace, String name, AndAudit<IEvent> eventAndAudit) {
+        String fileName = nameAndNameSpaceToFileName.apply(nameSpace, name);
+        logger.debug("Appending to file " + fileName + " event " + eventAndAudit);
+        return AsyncHelper.wrapRunnable(executor, () -> FilesHelper.writeLineToFile(fileName, iso.from(eventAndAudit)));
     }
 }

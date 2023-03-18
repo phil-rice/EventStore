@@ -24,4 +24,10 @@ public interface ListHelper {
         for (T t : list) result.add(lineToT.apply(t));
         return result;
     }
+
+    static <T, T1, E extends Exception> ArrayList<T1> flatMap(List<T> list, FunctionWithException<T, List<T1>, E> lineToT) throws E {
+        var result = new ArrayList<T1>(list.size());
+        for (T t : list) result.addAll(lineToT.apply(t));
+        return result;
+    }
 }

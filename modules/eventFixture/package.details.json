@@ -9,7 +9,7 @@
       }
     }
   },
-  "links":       ["events"],
+  "links":       ["events", "audit"],
   "guards":      {
     "mvn":     true,
     "compile": true,

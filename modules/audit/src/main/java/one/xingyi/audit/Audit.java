@@ -1,4 +1,4 @@
-package one.xingyi.events;
+package one.xingyi.audit;
 
 public record Audit(String who, long when, String what) {
 }

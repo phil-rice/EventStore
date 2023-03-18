@@ -1,7 +1,8 @@
 package one.xingyi.eventProcessor;
 
-import one.xingyi.events.Audit;
-import one.xingyi.events.EventAndAudit;
+import one.xingyi.audit.AndAudit;
+import one.xingyi.audit.Audit;
+import one.xingyi.events.IEvent;
 import one.xingyi.optics.iso.IIso;
 import one.xingyi.optics.iso.Tuple2;
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,8 @@ class MergeEventProcessorTest {
 
     @Test
     public void testMergeEventProcessor() throws ExecutionException, InterruptedException {
-        IEventProcessor<EventAndAudit, Tuple2<Object, List<Audit>>> processor = IEventProcessor.merge(
-                IEventProcessor.parentEventProcessor(IEventProcessor.defaultEventProcessor(IEventTc.jsonEventIc(idToValue)), EventAndAudit::event),
+        IEventProcessor<AndAudit<IEvent>, Tuple2<Object, List<Audit>>> processor = IEventProcessor.merge(
+                IEventProcessor.parentEventProcessor(IEventProcessor.defaultEventProcessor(IEventTc.jsonEventIc(idToValue)), AndAudit<IEvent>::payload),
                 IEventProcessor.auditEventProcessor(),
                 IIso.identity()
         );

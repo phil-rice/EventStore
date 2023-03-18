@@ -1,9 +1,10 @@
 package one.xingyi.events.api.controllers;
 
+import one.xingyi.events.EventAndWhy;
+import one.xingyi.audit.IWho;
 import one.xingyi.eventStore.IEventStore;
 import one.xingyi.events.IEvent;
-import one.xingyi.events.api.domain.EventAndWhy;
-import one.xingyi.events.api.domain.IWho;
+import one.xingyi.events.utils.AsyncHelper;
 import one.xingyi.events.utils.ITime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -33,7 +34,7 @@ public class SampleController {
 
     @PostMapping(value = "/sampleEvent/{namespace}/{name}", produces = "application/json")
     public CompletableFuture<Void> sampleEvents(@PathVariable String namespace, @PathVariable String name, @RequestHeader HttpHeaders headers) {
-        events01234.forEach(e -> eventStore.appendEvent(namespace, name, new EventAndWhy(e, "sample").andAudit(who.who(headers), time.time())).join());
+        AsyncHelper.forEach(events01234, e -> eventStore.appendEvent(namespace, name, new EventAndWhy(e, "sample").andAudit(who.who(headers), time.time())));
         return CompletableFuture.completedFuture(null);
     }
 

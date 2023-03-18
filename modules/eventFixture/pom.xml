@@ -31,6 +31,11 @@
       <artifactId>events</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>dev.srebootcamp</groupId>
+      <artifactId>audit</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

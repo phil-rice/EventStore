@@ -4,11 +4,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 import java.util.function.Function;
 
 public interface StringHelper {
+
+    static Function< String, String> asPathNoExtension(String rootDir, String sep, int... lengths) {
+        return s -> String.join(sep, List.of(rootDir, asDirectories(sep, lengths).apply(sha256(s)), s ));
+    }
 
     static Function<String, String> asDirectories(String sep, int... lengths) {
         int fullLength = Arrays.stream(lengths).sum();
