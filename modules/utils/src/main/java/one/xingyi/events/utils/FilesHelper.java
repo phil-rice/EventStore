@@ -15,8 +15,6 @@ public interface FilesHelper {
 
     }
 
-
-
     static void writeLineToFile(String fileName, String line) throws IOException {
         Path path = Paths.get(fileName);
         File parent = path.getParent().toFile();

@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 public class WrappedException extends RuntimeException {
     public WrappedException(Throwable cause) {
-        super(cause);
+        super(cause.getMessage(), cause);
     }
 
     public static RuntimeException wrap(Throwable t) {

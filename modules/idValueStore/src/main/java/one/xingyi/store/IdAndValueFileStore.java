@@ -3,16 +3,12 @@ package one.xingyi.store;
 import one.xingyi.events.utils.AsyncHelper;
 import one.xingyi.events.utils.JsonHelper;
 import one.xingyi.events.utils.StringHelper;
-import one.xingyi.events.utils.WrappedException;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Function;
-
-import static one.xingyi.events.utils.WrappedException.wrapRunnable;
-import static one.xingyi.events.utils.WrappedException.wrapValue;
 
 public class IdAndValueFileStore implements IIdAndValueStore {
     private Executor executor;
@@ -22,7 +18,7 @@ public class IdAndValueFileStore implements IIdAndValueStore {
     public static String defaultMetadataExtension = "metadata";
 
     public static IdAndValueFileStore store(Executor executor, String dir, String separator, int... pattern) {
-        return new IdAndValueFileStore(executor, StringHelper.asPathNoExtension(dir, separator, pattern), defaultMetadataExtension);
+        return new IdAndValueFileStore(executor, StringHelper.asFileNoExtension(dir, separator, pattern), defaultMetadataExtension);
     }
 
     public IdAndValueFileStore(Executor executor, Function<String, String> idToFileBaseName, String metadataExtension) {

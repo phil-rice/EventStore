@@ -34,6 +34,15 @@ class StringHelperTest {
         assertEquals("", StringHelper.asDirectories("/").apply("abc"));
         assertEquals("a/b", StringHelper.asDirectories("/", 1, 1).apply("abc"));
         assertEquals("2c&f2&4d", StringHelper.asDirectories("&", 2, 2, 2).apply("2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"));
+        var e = assertThrows(IllegalArgumentException.class, () -> StringHelper.asDirectories("/", 2, 2).apply("a"));
+        assertEquals("String is too short to be a directory path. Min length 4 String is a", e.getMessage());
+        assertThrows(IllegalArgumentException.class, () -> StringHelper.asDirectories("/", 2, 2).apply("abc"));
+        assertEquals("ab/cd", StringHelper.asDirectories("/", 2, 2).apply("abcd"));
+    }
+
+    @Test
+    public void testAsFileNoExtension(){
+        assertEquals("root/7/d/1/abcdefg", StringHelper.asFileNoExtension("root", "/", 1, 1, 1).apply("abcdefg"));
     }
 
 }
