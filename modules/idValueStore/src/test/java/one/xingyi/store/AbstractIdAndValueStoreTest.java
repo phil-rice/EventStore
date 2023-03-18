@@ -1,9 +1,12 @@
 package one.xingyi.store;
 
 import one.xingyi.audit.Audit;
+import one.xingyi.events.utils.WrappedException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,5 +60,13 @@ abstract public class AbstractIdAndValueStoreTest {
         ValueAndMetadata res1 = store.get(pr1.id()).join();
         assertEquals(m1, res1.metadata());
         assertArrayEquals(value1, res1.value());
+    }
+
+    @Test
+    public void testNotFound() {
+        var store = storeSupplier.get();
+        var notFoundF = store.get("notFound");
+        var e = assertThrows(CompletionException.class, notFoundF::join);
+        assertEquals(NotFoundException.class, WrappedException.unwrap(e).getClass());
     }
 }

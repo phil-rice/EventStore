@@ -4,7 +4,7 @@ import one.xingyi.audit.AndAudit;
 import one.xingyi.audit.Audit;
 import one.xingyi.events.IEvent;
 import one.xingyi.optics.iso.IIso;
-import one.xingyi.optics.iso.Tuple2;
+import one.xingyi.events.utils.Tuple2;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

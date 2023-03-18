@@ -25,7 +25,7 @@ public class IdAndValueFileStoreTest extends AbstractIdAndValueStoreTest {
         super(() -> {
             var dir = wrapValue(() -> File.createTempFile("test", "idAndValueFileStore"));
             dir.delete();
-            return IdAndValueFileStore.store(executor, dir.getAbsolutePath(), File.separator, 2, 2);
+            return IdAndValueFileStore.store(executor, "someSecret", dir.getAbsolutePath(), File.separator, 2, 2);
         });
     }
 }

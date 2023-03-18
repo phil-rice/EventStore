@@ -12,15 +12,18 @@ public class IdAndValueMemoryStore implements IIdAndValueStore {
 
     @Override
     public CompletableFuture<ValueAndMetadata> get(String id) {
-        return CompletableFuture.completedFuture(map.get(id));
+        ValueAndMetadata value = map.get(id);
+        return value == null
+                ? CompletableFuture.failedFuture(new NotFoundException())
+                : CompletableFuture.completedFuture(value);
     }
 
     @Override
     public CompletableFuture<PutResult> put(ValueAndMetadata valueAndMetadata) {
         String id = hash.hash(valueAndMetadata.value());
         if (map.containsKey(id))
-            return CompletableFuture.completedFuture(new PutResult(id, Optional.of(map.get(id).metadata())));
+            return CompletableFuture.completedFuture(new PutResult(id, Optional.empty(), Optional.of(map.get(id).metadata())));
         map.put(id, valueAndMetadata);
-        return CompletableFuture.completedFuture(new PutResult(id, Optional.empty()));
+        return CompletableFuture.completedFuture(new PutResult(id, Optional.of(valueAndMetadata.metadata()), Optional.empty()));
     }
 }

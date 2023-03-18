@@ -9,7 +9,7 @@
       }
     }
   },
-  "links":       ["utils",  "audit"],
+  "links":       ["utils",  "audit", "signedData"],
   "guards":      {
     "mvn":     true,
     "compile": true,

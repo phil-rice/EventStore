@@ -1,5 +1,7 @@
 package one.xingyi.events.utils;
 
+import org.assertj.core.groups.Tuple;
+
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +29,15 @@ public interface StringHelper {
             }
             //Note the end is deliberatly ignored... this is finding the directory from the string. In usage the end is the file name
             return String.join(sep, parts);
+        };
+    }
+
+    static Function<String, Tuple2<String, String>> splitIn2(String separator) {
+        return s -> {
+            int index = s.indexOf(separator);
+            if (index < 0)
+                throw new RuntimeException("Cannot split string " + s + " into 2 parts using separator " + separator);
+            return new Tuple2<>(s.substring(0, index), s.substring(index + 1));
         };
     }
 

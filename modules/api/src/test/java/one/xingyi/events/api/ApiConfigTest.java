@@ -11,9 +11,9 @@ class ApiConfigTest {
     @Test
     public void testStore() {
         ApiConfig config = new ApiConfig();
-        assertEquals(FileEventStore.class, config.store().getClass());
-        FileEventStore store = (FileEventStore) config.store();
-        assertEquals("fileStore/ns/82/a3/53/name.dat", store.nameAndNameSpaceToFileName.apply("ns", "name").replaceAll("\\\\", "/"));
+        FileEventStore store = (FileEventStore) config.store("theFileStoreDir");
+        assertEquals(FileEventStore.class, store.getClass());
+        assertEquals("theFileStoreDir/ns/82/a3/53/name.dat", store.nameAndNameSpaceToFileName.apply("ns", "name").replaceAll("\\\\", "/"));
         assertEquals("anonymous", config.who().who(new HttpHeaders()));
     }
 }

@@ -1,7 +1,7 @@
 package one.xingyi.eventProcessor;
 
 import one.xingyi.optics.iso.IIso;
-import one.xingyi.optics.iso.Tuple2;
+import one.xingyi.events.utils.Tuple2;
 
 import java.util.concurrent.CompletableFuture;
 

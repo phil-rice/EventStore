@@ -2,6 +2,8 @@ package one.xingyi.audit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import one.xingyi.events.utils.JsonHelper;
+import one.xingyi.events.utils.StringHelper;
+import one.xingyi.events.utils.Tuple2;
 import one.xingyi.optics.iso.IIso;
 import one.xingyi.optics.iso.Iso;
 
@@ -27,18 +29,9 @@ public interface AuditIso {
     }
 
     static <T> Function<String, AndAudit<T>> parser(Function<String, T> thingParser) {
-        return s -> {
-            int index = s.indexOf("\t");
-            if (index < 0) throw new RuntimeException("Trying to parse an audited item. No tab in " + s);
-            String auditString = s.substring(0, index);
-            String thingString = s.substring(index + 1);
-            try {
-                Audit audit = JsonHelper.mapper.readValue(auditString, Audit.class);
-                T thing = thingParser.apply(thingString);
-                return new AndAudit<>(thing, audit);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        };
+        var splitter = StringHelper.splitIn2("\t");
+        return s -> splitter.apply(s).mapTo((auditString, thingString) -> new AndAudit<>(
+                thingParser.apply(thingString),
+                JsonHelper.mapper.readValue(auditString, Audit.class)));
     }
 }

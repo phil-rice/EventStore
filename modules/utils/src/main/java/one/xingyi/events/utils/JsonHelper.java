@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public interface JsonHelper {
     final static ObjectMapper mapper = new ObjectMapper();
@@ -40,6 +41,19 @@ public interface JsonHelper {
         if (value.startsWith("[")) return mapper.readValue(value, List.class);
         if (value.startsWith("{")) return mapper.readValue(value, Object.class);
         throw new RuntimeException("Unknown json " + value);
+    }
+
+    static <T> Function<Tuple2<String, T>, String> tupleToStringAndJson(String separator) {
+        return tuple -> tuple.one() + "\t" + printJson(tuple.two());
+    }
+
+    static <T> Function<String, Tuple2<String, T>> stringToTupleOfStringAndJson(String separator, Class<T> tClass) {
+        var splitter = StringHelper.splitIn2(separator);
+        return s -> {
+            Tuple2<String, String> tuple2 = splitter.apply(s);
+            return tuple2.mapTwo(WrappedException.wrapFn((two -> JsonHelper.mapper.readValue(two, tClass))));
+        };
+
     }
 
     static String printJson(Object object) {

@@ -1,6 +1,7 @@
 package one.xingyi.events.utils;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -54,6 +55,7 @@ public class WrappedException extends RuntimeException {
 
     public static Throwable unwrap(Throwable t) {
         if (t instanceof WrappedException) return unwrap(t.getCause());
+        if (t instanceof CompletionException) return unwrap(t.getCause());
         return t;
     }
 }
