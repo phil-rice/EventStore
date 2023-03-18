@@ -1,0 +1,20 @@
+{
+  "template":    "springboot",
+  "name":        "signedData",
+  "description": "Signed data: stored json prefixed with a signature that needs a secret to verify",
+  "mvn":         {
+    "project": {
+      "dependencies": {
+        "dependency": [
+          ]
+      }
+    }
+  },
+  "links":       ["utils", "optics"],
+  "guards":      {
+    "mvn":     true,
+    "compile": true,
+    "publish": false,
+    "test":    true
+  }
+}
