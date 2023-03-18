@@ -6,6 +6,7 @@ import one.xingyi.audit.IWho;
 import one.xingyi.eventStore.IEventStore;
 import one.xingyi.events.IEvent;
 import one.xingyi.events.utils.ITime;
+import one.xingyi.events.utils.NullHelper;
 import one.xingyi.events.utils.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,8 +47,8 @@ public class EventsController {
 
 
     @PostMapping(value = "/events/{namespace}/{name}", consumes = "application/json")
-    public CompletableFuture<Void> appendEvents(@PathVariable String namespace, @PathVariable String name, @RequestBody EventAndWhy eventAndWhy, @RequestHeader HttpHeaders headers) {
-        AndAudit<IEvent> auditAndEvent = eventAndWhy.andAudit(who.who(headers), time.time());
+    public CompletableFuture<Void> appendEvents(@PathVariable String namespace, @PathVariable String name, @RequestBody IEvent event, @RequestParam(required = false) String why, @RequestHeader HttpHeaders headers) {
+        AndAudit<IEvent> auditAndEvent = new EventAndWhy(event, NullHelper.orElse(why, "unknown")).andAudit(who.who(headers), time.time());
         logger.debug("Appending event " + auditAndEvent);
         return eventStore.appendEvent(namespace, name, auditAndEvent);
     }

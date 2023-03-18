@@ -1,13 +1,10 @@
 package one.xingyi.events.api.controllers;
 
-import one.xingyi.events.EventAndWhy;
 import one.xingyi.audit.IWho;
 import one.xingyi.eventStore.IEventStore;
 import one.xingyi.events.IEvent;
-import one.xingyi.events.utils.AsyncHelper;
 import one.xingyi.events.utils.ITime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.CompletableFuture;
@@ -27,13 +24,12 @@ public class SampleController {
     }
 
     @GetMapping(value = "/sampleEvent/{i}", produces = "application/json")
-    public CompletableFuture<EventAndWhy> sampleEvents(@PathVariable Integer i) {
+    public CompletableFuture<IEvent> sampleEvents(@PathVariable Integer i) {
         IEvent e = events01234.get(i);
         System.out.println("Event " + i + " is " + e);
         if (e == null) throw new RuntimeException("No event for " + i);
-        return CompletableFuture.completedFuture(new EventAndWhy(e, "sample"));
+        return CompletableFuture.completedFuture(e);
     }
-
 
 
 }
