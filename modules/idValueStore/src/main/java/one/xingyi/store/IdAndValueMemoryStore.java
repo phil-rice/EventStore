@@ -1,5 +1,7 @@
 package one.xingyi.store;
 
+import one.xingyi.events.utils.IHash;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

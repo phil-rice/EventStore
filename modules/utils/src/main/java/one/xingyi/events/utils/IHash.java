@@ -1,6 +1,4 @@
-package one.xingyi.store;
-
-import one.xingyi.events.utils.StringHelper;
+package one.xingyi.events.utils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

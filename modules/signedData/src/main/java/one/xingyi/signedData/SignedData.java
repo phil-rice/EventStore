@@ -1,7 +1,7 @@
 package one.xingyi.signedData;
 
 import one.xingyi.optics.iso.IIso;
-import one.xingyi.store.IHash;
+import one.xingyi.events.utils.IHash;
 
 public interface SignedData {
     static <T> IIso<String, T> iso(String secret, Class<T> tClass) {

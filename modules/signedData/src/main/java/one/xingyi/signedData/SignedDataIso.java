@@ -3,7 +3,7 @@ package one.xingyi.signedData;
 import one.xingyi.events.utils.JsonHelper;
 import one.xingyi.events.utils.StringHelper;
 import one.xingyi.optics.iso.IIso;
-import one.xingyi.store.IHash;
+import one.xingyi.events.utils.IHash;
 
 import java.nio.charset.StandardCharsets;
 

@@ -4,6 +4,7 @@ import one.xingyi.audit.IWho;
 import one.xingyi.audit.Who;
 import one.xingyi.eventStore.FileEventStore;
 import one.xingyi.eventStore.IEventStore;
+import one.xingyi.events.utils.IMimeHelper;
 import one.xingyi.store.IIdAndValueStore;
 import one.xingyi.store.IdAndValueFileStore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,11 @@ import java.util.concurrent.Executor;
 
 @Configuration
 public class ApiConfig {
+
+    @Bean
+    IMimeHelper mimeHelper() {
+        return IMimeHelper.defaultMimeHelper;
+    }
 
     @Autowired
     Executor executor;

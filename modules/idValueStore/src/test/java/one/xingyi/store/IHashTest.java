@@ -1,5 +1,7 @@
 package one.xingyi.store;
 
+import one.xingyi.events.utils.HashMismatchException;
+import one.xingyi.events.utils.IHash;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
