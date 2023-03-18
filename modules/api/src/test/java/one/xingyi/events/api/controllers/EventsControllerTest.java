@@ -1,11 +1,8 @@
 package one.xingyi.events.api.controllers;
 
-import one.xingyi.audit.AndAudit;
-import one.xingyi.audit.Audit;
 import one.xingyi.events.EventAndWhy;
 import one.xingyi.audit.Who;
 import one.xingyi.eventStore.MapEventStore;
-import one.xingyi.events.IEvent;
 import one.xingyi.events.utils.JsonHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,17 +23,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = {IntegrationTestContext.class})
-class EventsApiControllerTest {
+class EventsControllerTest {
 
     MockMvc mockMvc;
 
-    EventsApiController controller = null;
+    EventsController controller = null;
 
     @BeforeEach
     void setup() {
         new IntegrationTestContext();
         var count = new AtomicLong();
-        controller = new EventsApiController(() -> 1000 * count.getAndIncrement(), new Who(), new MapEventStore());
+        controller = new EventsController(() -> 1000 * count.getAndIncrement(), new Who(), new MapEventStore());
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 
     }

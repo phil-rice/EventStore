@@ -1,5 +1,6 @@
 package one.xingyi.audit;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public record AndAudit<T>(T payload, Audit audit) {
@@ -14,4 +15,7 @@ public record AndAudit<T>(T payload, Audit audit) {
         return new AndAudit<>(fn.apply(payload), audit);
     }
 
+    public <T1> CompletableFuture<AndAudit<T1>> mapK(Function<T, CompletableFuture<T1>> fn) {
+        return fn.apply(payload).thenApply(v ->new AndAudit<>(v, audit));
+    }
 }

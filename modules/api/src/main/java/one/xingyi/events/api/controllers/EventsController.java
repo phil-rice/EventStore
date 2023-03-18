@@ -19,14 +19,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 @RestController
-public class EventsApiController {
-    static Logger logger = LoggerFactory.getLogger(EventsApiController.class);
+public class EventsController {
+    static Logger logger = LoggerFactory.getLogger(EventsController.class);
     final ITime time;
     final IWho who;
 
     final IEventStore eventStore;
 
-    EventsApiController(@Autowired ITime time, @Autowired IWho who, @Autowired IEventStore eventStore) {
+    EventsController(@Autowired ITime time, @Autowired IWho who, @Autowired IEventStore eventStore) {
         this.time = time;
         this.who = who;
         this.eventStore = eventStore;

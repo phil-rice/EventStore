@@ -24,7 +24,9 @@ class MergeEventProcessorTest {
                 IIso.identity()
         );
         assertEquals(new Tuple2<>(Map.of("a", 44, "b", 4), audit01234),
-                IEventProcessor.evaluate(processor, evA01234, new Tuple2<>(null, List.of())).get());
+                IEventProcessor.evaluate(processor, e ->false, evA01234, new Tuple2<>(null, List.of())).get());
+        assertEquals(new Tuple2<>(Map.of("a", 44, "b", 4), audit01234.subList(3,5)),
+                IEventProcessor.evaluate(processor, e ->e.payload().isSource(), evA01234, new Tuple2<>(null, List.of())).get());
 
     }
 

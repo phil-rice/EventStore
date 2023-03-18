@@ -5,4 +5,8 @@ import one.xingyi.events.utils.JsonHelper;
 
 public record LensEvent(String lens, String value, String parser) implements IEvent {
 
+    @Override
+    public boolean isSource() {
+        return false;
+    }
 }

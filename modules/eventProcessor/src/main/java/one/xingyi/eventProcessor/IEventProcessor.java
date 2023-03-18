@@ -9,6 +9,7 @@ import one.xingyi.eventProcessor.value.SetValueEventValueProcessor;
 import one.xingyi.eventProcessor.value.ZeroEventValueProcessor;
 import one.xingyi.events.IEvent;
 import one.xingyi.events.utils.AsyncHelper;
+import one.xingyi.events.utils.ListHelper;
 import one.xingyi.optics.iso.IIso;
 import one.xingyi.events.utils.Tuple2;
 
@@ -16,14 +17,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public interface IEventProcessor<E, T> {
     boolean canProcess(E event);
 
     CompletableFuture<T> apply(T value, E event);
 
-    static <T, E> CompletableFuture<T> evaluate(IEventProcessor<E, T> eventProcessor, List<E> events, T zero) {
-        return AsyncHelper.foldLeft(events, zero, eventProcessor::apply);
+    static <E> List<E> eventsFromLastSource(List<E> list, Predicate<E> isSource) {
+        return ListHelper.takeFrom(list, ListHelper.lastIndexOf(list, isSource));
+    }
+
+    static <T, E> CompletableFuture<T> evaluate(IEventProcessor<E, T> eventProcessor,Predicate<E> isSource, List<E> events, T zero) {
+        return AsyncHelper.foldLeft(eventsFromLastSource(events,isSource), zero, eventProcessor::apply);
     }
 
 

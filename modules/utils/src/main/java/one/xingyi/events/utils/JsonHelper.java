@@ -30,7 +30,7 @@ public interface JsonHelper {
 
     static BiFunctionWithException<String, String, Object, Exception> toJsonParser =
             (p, s) -> {
-                if (p != "json") throw new RuntimeException("Unknown parser " + p);
+                if (!p.equals("json")) throw new RuntimeException("Unknown parser [" + p + "]");
                 return JsonHelper.parseJson(s);
             };
 

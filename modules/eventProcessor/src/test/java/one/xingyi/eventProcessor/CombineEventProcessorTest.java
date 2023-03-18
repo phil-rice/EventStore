@@ -17,6 +17,7 @@ class CombineEventProcessorTest {
         IEventProcessor<IEvent, Object> processor = IEventProcessor.defaultEventProcessor(IEventTc.jsonEventIc(idToValue));
 
         assertEquals(Map.of("a", 44, "b", 4), IEventProcessor.evaluate(processor,
+                IEvent::isSource,
                 List.of(
                         valueEvent1,
                         valueEvent2,
@@ -29,7 +30,7 @@ class CombineEventProcessorTest {
     public void testCombineEventProcessor2() throws ExecutionException, InterruptedException {
         IEventProcessor<IEvent, Object> processor = IEventProcessor.defaultEventProcessor(IEventTc.jsonEventIc(idToValue));
 
-        assertEquals(Map.of("a", 44, "b", 2), IEventProcessor.evaluate(processor, List.of(
+        assertEquals(Map.of("a", 44, "b", 2), IEventProcessor.evaluate(processor, IEvent::isSource, List.of(
                 valueEvent1,
                 lensEvent4
         ), null).get());

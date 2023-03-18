@@ -1,5 +1,6 @@
 package one.xingyi.events;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -14,6 +15,13 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = SetIdEvent.class, name = "id")
 })
 public interface IEvent {
+    /**
+     * If this is true, no previous events in a list of events,need to be considered
+     */
+    @JsonIgnore
+    default boolean isSource() {
+        return true;
+    }
 
 
 }

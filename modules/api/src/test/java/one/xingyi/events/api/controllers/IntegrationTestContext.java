@@ -11,9 +11,9 @@ import java.util.concurrent.atomic.AtomicLong;
 @TestConfiguration
 public class IntegrationTestContext {
     @Bean @Primary
-    EventsApiController makeEventsApiController() {
+    EventsController makeEventsApiController() {
         var count = new AtomicLong();
-        return new EventsApiController(() -> 1000 * count.getAndIncrement(), new Who(), new MapEventStore());
+        return new EventsController(() -> 1000 * count.getAndIncrement(), new Who(), new MapEventStore());
     }
 
 }
