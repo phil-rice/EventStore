@@ -1,4 +1,4 @@
-package one.xingyi.events.api;
+package one.xingyi.events.api.domain;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;

@@ -1,4 +1,4 @@
-package one.xingyi.events.api;
+package one.xingyi.events.api.domain;
 
 import one.xingyi.events.Audit;
 import one.xingyi.events.EventAndAudit;

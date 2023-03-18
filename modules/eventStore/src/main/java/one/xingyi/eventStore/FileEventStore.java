@@ -3,6 +3,7 @@ package one.xingyi.eventStore;
 import one.xingyi.events.EventAndAudit;
 import one.xingyi.events.IEventParserPrinter;
 import one.xingyi.events.utils.FilesHelper;
+import one.xingyi.events.utils.StringHelper;
 import one.xingyi.optics.iso.IIso;
 
 import java.io.File;
@@ -16,12 +17,13 @@ public class FileEventStore implements IEventStore {
     public final BiFunction<String, String, String> nameAndNameSpaceToFileName;
     private IIso<String, EventAndAudit> iso;
 
-    public static FileEventStore store(String dir) {
-        return new FileEventStore(FileEventStore.nameAndNameSpaceToFileName(dir), IEventParserPrinter.iso);
+    public static FileEventStore store(String dir, String separator, int... pattern) {
+        return new FileEventStore(FileEventStore.nameAndNameSpaceToFileName(dir, separator, pattern), IEventParserPrinter.iso);
     }
 
-    public static BiFunction<String, String, String> nameAndNameSpaceToFileName(String dir) {
-        return (ns, n) -> String.join(File.separator, List.of(dir, ns, n));
+    public static BiFunction<String, String, String> nameAndNameSpaceToFileName(String dir, String separator, int... pattern) {
+        var toDir = StringHelper.asDirectories(separator, pattern);
+        return (ns, n) -> String.join(separator, List.of(dir, ns, toDir.apply(StringHelper.sha256(n)), n)) + ".dat";
     }
 
     public FileEventStore(BiFunction<String, String, String> nameAndNameSpaceToFileName, IIso<String, EventAndAudit> iso) {
