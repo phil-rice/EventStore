@@ -16,26 +16,24 @@ import static one.xingyi.eventFixture.EventProcessorFixture.events01234;
 
 @RestController
 public class SampleController {
-    @Autowired
     ITime time;
-    @Autowired
     IWho who;
-
-    @Autowired
     IEventStore eventStore;
 
+    public SampleController(@Autowired ITime time, @Autowired IWho who, @Autowired IEventStore eventStore) {
+        this.time = time;
+        this.who = who;
+        this.eventStore = eventStore;
+    }
+
     @GetMapping(value = "/sampleEvent/{i}", produces = "application/json")
-    public EventAndWhy sampleEvents(@PathVariable Integer i) {
+    public CompletableFuture<EventAndWhy> sampleEvents(@PathVariable Integer i) {
         IEvent e = events01234.get(i);
         System.out.println("Event " + i + " is " + e);
         if (e == null) throw new RuntimeException("No event for " + i);
-        return new EventAndWhy(e, "sample");
+        return CompletableFuture.completedFuture(new EventAndWhy(e, "sample"));
     }
 
-    @PostMapping(value = "/sampleEvent/{namespace}/{name}", produces = "application/json")
-    public CompletableFuture<Void> sampleEvents(@PathVariable String namespace, @PathVariable String name, @RequestHeader HttpHeaders headers) {
-        AsyncHelper.forEach(events01234, e -> eventStore.appendEvent(namespace, name, new EventAndWhy(e, "sample").andAudit(who.who(headers), time.time())));
-        return CompletableFuture.completedFuture(null);
-    }
+
 
 }

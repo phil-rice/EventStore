@@ -59,7 +59,7 @@ class EventsApiControllerTest {
         String expected = JsonHelper.printJson(
                 Map.of("name", Map.of("ns", List.of(
                         Map.of("payload", Map.of("type", "zero"),
-                                "audit", Map.of("who", "annonymous", "when", 0, "what", "why"))
+                                "audit", Map.of("who", "anonymous", "when", 0, "what", "why"))
                 ))));
 
         MockMvcHelper.performAsync(mockMvc,

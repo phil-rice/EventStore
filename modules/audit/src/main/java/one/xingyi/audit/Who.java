@@ -7,6 +7,6 @@ import org.springframework.util.MultiValueMap;
 public class Who implements IWho {
     @Override
     public String who(MultiValueMap<String, String> headers) {
-        return "annonymous";
+        return "anonymous";
     }
 }
