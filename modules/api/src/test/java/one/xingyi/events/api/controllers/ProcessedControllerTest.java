@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -69,6 +70,17 @@ class ProcessedControllerTest {
         MockMvcHelper.performAsync(mockMvc,
                 m -> m.perform(get("/processed/ns/name").contentType("application/json")),
                 m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 44, "b", 3)))))));
+    }
+
+    @Test
+    public void testCanProcessZeroEvent() throws Exception {
+        eventStore.appendEvent("ns", "name", evA0).join();
+        Map<String,Object> nsNull = new HashMap<>();
+        nsNull.put("ns", null);
+        Map<String, Map<String, Object>> expected = Map.of("name",nsNull);
+        MockMvcHelper.performAsync(mockMvc,
+                m -> m.perform(get("/processed/ns/name").contentType("application/json")),
+                m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(expected))));
     }
 
     @Test
