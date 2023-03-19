@@ -1,7 +1,7 @@
 package one.xingyi.events.api.controllers;
 
 import one.xingyi.audit.Who;
-import one.xingyi.eventStore.MapEventStore;
+import one.xingyi.events.eventStore.MapEventStore;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;

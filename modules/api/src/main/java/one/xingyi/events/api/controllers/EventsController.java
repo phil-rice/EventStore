@@ -1,9 +1,9 @@
 package one.xingyi.events.api.controllers;
 
 import one.xingyi.audit.AndAudit;
-import one.xingyi.events.EventAndWhy;
+import one.xingyi.events.api.EventAndWhy;
 import one.xingyi.audit.IWho;
-import one.xingyi.eventStore.IEventStore;
+import one.xingyi.events.eventStore.IEventStore;
 import one.xingyi.events.IEvent;
 import one.xingyi.events.utils.services.ITime;
 import one.xingyi.events.utils.helpers.NullHelper;

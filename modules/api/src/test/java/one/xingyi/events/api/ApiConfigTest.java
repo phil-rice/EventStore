@@ -1,6 +1,6 @@
 package one.xingyi.events.api;
 
-import one.xingyi.eventStore.FileEventStore;
+import one.xingyi.events.eventStore.FileEventStore;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 

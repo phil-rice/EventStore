@@ -2,11 +2,11 @@ package one.xingyi.events.api;
 
 import one.xingyi.audit.IWho;
 import one.xingyi.audit.Who;
-import one.xingyi.eventStore.FileEventStore;
-import one.xingyi.eventStore.IEventStore;
+import one.xingyi.events.eventStore.FileEventStore;
+import one.xingyi.events.eventStore.IEventStore;
 import one.xingyi.events.utils.services.IMimeHelper;
-import one.xingyi.store.IIdAndValueStore;
-import one.xingyi.store.IdAndValueFileStore;
+import one.xingyi.store.idvaluestore.IIdAndValueStore;
+import one.xingyi.store.idvaluestore.IdAndValueFileStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

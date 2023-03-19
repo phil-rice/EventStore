@@ -1,7 +1,7 @@
 package one.xingyi.events.api.controllers;
 
 import one.xingyi.audit.IWho;
-import one.xingyi.eventStore.IEventStore;
+import one.xingyi.events.eventStore.IEventStore;
 import one.xingyi.events.IEvent;
 import one.xingyi.events.utils.services.ITime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.CompletableFuture;
 
-import static one.xingyi.eventFixture.EventProcessorFixture.events01234;
+import static one.xingyi.events.eventFixture.EventProcessorFixture.events01234;
 
 @RestController
 public class SampleController {
