@@ -37,7 +37,6 @@ class ProcessedControllerTest {
 
     @BeforeEach
     void setup() {
-        new IntegrationTestContext();
         eventStore = new MapEventStore();
         idAndValue = new IdAndValueMemoryStore();
         controller = new ProcessedController(idAndValue, eventStore);

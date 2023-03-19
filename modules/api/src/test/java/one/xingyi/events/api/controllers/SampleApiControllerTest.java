@@ -21,7 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-@ContextConfiguration(classes = {IntegrationTestContext.class})
 class SampleApiControllerTest {
 
     MockMvc mockMvc;
@@ -30,11 +29,9 @@ class SampleApiControllerTest {
 
     @BeforeEach
     void setup() {
-        new IntegrationTestContext();
         var count = new AtomicLong();
         controller = new SampleController(() -> 1000 * count.getAndIncrement(), new Who(), new MapEventStore());
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-
     }
 
 

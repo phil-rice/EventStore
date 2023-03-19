@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-@ContextConfiguration(classes = {IntegrationTestContext.class})
+//@ContextConfiguration(classes = {IntegrationTestContext.class})
 class EventsControllerTest {
 
     MockMvc mockMvc;
@@ -31,11 +31,9 @@ class EventsControllerTest {
 
     @BeforeEach
     void setup() {
-        new IntegrationTestContext();
         var count = new AtomicLong();
         controller = new EventsController(() -> 1000 * count.getAndIncrement(), new Who(), new MapEventStore());
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-
     }
 
 
@@ -82,5 +80,7 @@ class EventsControllerTest {
                 m -> m.andExpect(status().isOk()).andExpect(content().json(expected)));
 
     }
+
+
 
 }
