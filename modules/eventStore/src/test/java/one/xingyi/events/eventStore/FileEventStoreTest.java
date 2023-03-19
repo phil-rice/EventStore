@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static one.xingyi.events.eventFixture.EventProcessorFixture.evA01234;
+import static one.xingyi.events.eventFixture.EventProcessorFixture.evVIA01234;
 import static one.xingyi.events.utils.helpers.StringHelper.to1Quote;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -62,14 +63,14 @@ class FileEventStoreTest extends AbstractEventStoreTest {
 
     @Test
     public void testSerialisationOfEvents() throws IOException {
-        String name = "name3";
+        String name = "name";
         AsyncHelper.forEach(evA01234, e -> eventStore.appendEvent(nameSpace, name, e)).join();
         var lines = savedContent(nameSpace, name);
-        assertEquals(to1Quote(FileEventStore.defaultIso.from(evA01234.get(0))), lines.get(0));
-        assertEquals(to1Quote(FileEventStore.defaultIso.from(evA01234.get(1))), lines.get(1));
-        assertEquals(to1Quote(FileEventStore.defaultIso.from(evA01234.get(2))), lines.get(2));
-        assertEquals(to1Quote(FileEventStore.defaultIso.from(evA01234.get(3))), lines.get(3));
-        assertEquals(to1Quote(FileEventStore.defaultIso.from(evA01234.get(4))), lines.get(4));
+        assertEquals(to1Quote(FileEventStore.defaultIso.from(evVIA01234.get(0))), lines.get(0));
+        assertEquals(to1Quote(FileEventStore.defaultIso.from(evVIA01234.get(1))), lines.get(1));
+        assertEquals(to1Quote(FileEventStore.defaultIso.from(evVIA01234.get(2))), lines.get(2));
+        assertEquals(to1Quote(FileEventStore.defaultIso.from(evVIA01234.get(3))), lines.get(3));
+        assertEquals(to1Quote(FileEventStore.defaultIso.from(evVIA01234.get(4))), lines.get(4));
         assertEquals(5, lines.size());
 
     }

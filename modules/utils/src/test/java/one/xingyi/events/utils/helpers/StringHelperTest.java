@@ -1,6 +1,8 @@
 package one.xingyi.events.utils.helpers;
 
 import one.xingyi.events.utils.helpers.StringHelper;
+import one.xingyi.events.utils.tuples.Tuple2;
+import one.xingyi.events.utils.tuples.Tuple4;
 import org.junit.jupiter.api.Test;
 
 import java.security.NoSuchAlgorithmException;
@@ -15,6 +17,23 @@ class StringHelperTest {
         assertEquals(List.of("abc"), StringHelper.split("abc", ","));
         assertEquals(List.of("a", "c"), StringHelper.split("abc", "b"));
         assertEquals(List.of("a", "b", "c"), StringHelper.split(",,a,,b,,c,,", ","));
+    }
+
+    @Test
+    public void testSplitIn2() {
+        assertEquals(new Tuple2<String, String>("a", "b"), StringHelper.splitIn2(",").apply("a,b"));
+        assertEquals(new Tuple2<String, String>("", ""), StringHelper.splitIn2(",").apply(","));
+        assertThrows(IllegalArgumentException.class, () -> StringHelper.splitIn2(",").apply("abc"));
+    }
+
+    @Test
+    public void testSplitIn4() {
+        assertEquals(new Tuple4<>("a", "b", "c", "d"), StringHelper.splitIn4(",").apply("a,b,c,d"));
+        assertEquals(new Tuple4<>("", "", "", ""), StringHelper.splitIn4(",").apply(",,,"));
+        assertThrows(IllegalArgumentException.class, () -> StringHelper.splitIn4(",").apply("abc"));
+        assertThrows(IllegalArgumentException.class, () -> StringHelper.splitIn4(",").apply("a,bc"));
+        assertThrows(IllegalArgumentException.class, () -> StringHelper.splitIn4(",").apply("a,b,c"));
+
     }
 
     @Test
@@ -42,7 +61,7 @@ class StringHelperTest {
     }
 
     @Test
-    public void testAsFileNoExtension(){
+    public void testAsFileNoExtension() {
         assertEquals("root/7/d/1/abcdefg", StringHelper.asFileNoExtension("root", "/", 1, 1, 1).apply("abcdefg"));
     }
 

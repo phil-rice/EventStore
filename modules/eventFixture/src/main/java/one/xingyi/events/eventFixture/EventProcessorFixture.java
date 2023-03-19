@@ -1,6 +1,7 @@
 package one.xingyi.events.eventFixture;
 
 import one.xingyi.audit.AndAudit;
+import one.xingyi.audit.AndVersionIdAndAudit;
 import one.xingyi.audit.Audit;
 import one.xingyi.events.events.*;
 
@@ -40,6 +41,13 @@ public interface EventProcessorFixture {
     AndAudit<IEvent> evA3 = new AndAudit<IEvent>(idEvent3, audit3);
     AndAudit<IEvent> evA4 = new AndAudit<IEvent>(lensEvent4, audit4);
     List<AndAudit<IEvent>> evA01234 = List.of(evA0, evA1, evA2, evA3, evA4);
+
+    AndVersionIdAndAudit<IEvent> evVIA0 = new AndVersionIdAndAudit<IEvent>("0", "name", zeroEvent, audit0);
+    AndVersionIdAndAudit<IEvent> evVIA1 = new AndVersionIdAndAudit<IEvent>("0", "name", valueEvent1, audit1);
+    AndVersionIdAndAudit<IEvent> evVIA2 = new AndVersionIdAndAudit<IEvent>("0", "name", valueEvent2, audit2);
+    AndVersionIdAndAudit<IEvent> evVIA3 = new AndVersionIdAndAudit<IEvent>("0", "name", idEvent3, audit3);
+    AndVersionIdAndAudit<IEvent> evVIA4 = new AndVersionIdAndAudit<IEvent>("0", "name", lensEvent4, audit4);
+    List<AndVersionIdAndAudit<IEvent>> evVIA01234 = List.of(evVIA0, evVIA1, evVIA2, evVIA3, evVIA4);
 
 
     static Function<String, CompletableFuture<Object>> idToValueForTest = s -> {

@@ -1,6 +1,7 @@
 package one.xingyi.events.utils.helpers;
 
 import one.xingyi.events.utils.tuples.Tuple2;
+import one.xingyi.events.utils.tuples.Tuple4;
 
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -34,17 +35,32 @@ public interface StringHelper {
 
     static Function<String, Tuple2<String, String>> splitIn2(String separator) {
         return s -> {
-            int index = s.indexOf(separator);
-            if (index < 0)
-                throw new RuntimeException("Cannot split string " + s + " into 2 parts using separator " + separator);
+            int index = findIndex(separator, s, 0);
             return new Tuple2<>(s.substring(0, index), s.substring(index + 1));
         };
     }
 
-    static String to1Quote(String s){
+    static Function<String, Tuple4<String, String, String, String>> splitIn4(String separator) {
+        return s -> {
+            int index1 = findIndex(separator, s, 0);
+            int index2 = findIndex(separator, s, index1 + 1);
+            int index3 = findIndex(separator, s, index2 + 1);
+            return new Tuple4<>(s.substring(0, index1), s.substring(index1 + 1, index2), s.substring(index2 + 1, index3), s.substring(index3 + 1));
+        };
+    }
+
+    private static int findIndex(String separator, String s, int start) {
+        int index = s.indexOf(separator, Math.max(start, 0));
+        if (index < 0 || start < 0)
+            throw new IllegalArgumentException("Cannot split string " + s + " using separator " + separator);
+        return index;
+    }
+
+    static String to1Quote(String s) {
         return s.replace("\"", "'");
     }
-    static String to2Quote(String s){
+
+    static String to2Quote(String s) {
         return s.replace("'", "\"");
     }
 
