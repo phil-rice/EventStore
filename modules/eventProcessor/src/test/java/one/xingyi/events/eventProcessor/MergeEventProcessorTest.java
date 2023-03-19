@@ -19,7 +19,7 @@ class MergeEventProcessorTest {
     @Test
     public void testMergeEventProcessor() throws ExecutionException, InterruptedException {
         IEventProcessor<AndAudit<IEvent>, Tuple2<Object, List<Audit>>> processor = IEventProcessor.merge(
-                IEventProcessor.parentEventProcessor(IEventProcessor.defaultEventProcessor(IEventTc.jsonEventIc(idToValueForTest)), AndAudit<IEvent>::payload),
+                IEventProcessor.parentEventProcessor(IEventProcessor.defaultEventProcessor(IEventTc.jsonEventTC(idToValueForTest)), AndAudit<IEvent>::payload),
                 IEventProcessor.auditEventProcessor(),
                 IIso.identity()
         );

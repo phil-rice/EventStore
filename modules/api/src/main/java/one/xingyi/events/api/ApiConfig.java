@@ -1,12 +1,11 @@
 package one.xingyi.events.api;
 
-import com.schibsted.spt.data.jslt.Expression;
 import one.xingyi.event.audit.IWho;
 import one.xingyi.event.audit.Who;
 import one.xingyi.event.jslt.Jslt;
+import one.xingyi.event.postprocessor.IPostProcessor;
 import one.xingyi.events.eventStore.FileEventStore;
 import one.xingyi.events.eventStore.IEventStore;
-import one.xingyi.events.utils.jsontransform.IJsonTransform;
 import one.xingyi.events.utils.services.IMimeHelper;
 import one.xingyi.events.utils.services.ITime;
 import one.xingyi.events.utils.services.Time;
@@ -42,14 +41,16 @@ public class ApiConfig {
     }
 
     @Bean
+    IPostProcessor processor(@Autowired IIdAndValueStore store) {
+        if (store == null) throw new NullPointerException("store is null");
+        return IPostProcessor.defaultPostProcessor(IIdAndValueStore.getJsonString(store), new Jslt());
+    }
+
+    @Bean
     IWho who() {
         return new Who();
     }
 
-    @Bean
-    IJsonTransform<Expression> jslt() {
-        return new Jslt();
-    }
 
     @Bean
     ITime time() {

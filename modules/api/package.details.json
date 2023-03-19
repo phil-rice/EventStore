@@ -9,7 +9,7 @@
       }
     }
   },
-  "links":       ["eventProcessor", "eventStore", "idValueStore", "jslt"],
+  "links":       ["eventProcessor", "eventStore", "idValueStore", "jslt", "postprocessor"],
   "guards":      {
     "mvn":     true,
     "compile": true,

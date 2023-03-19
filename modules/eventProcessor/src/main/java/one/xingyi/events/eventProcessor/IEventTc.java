@@ -15,7 +15,7 @@ public record IEventTc<T>(
         Function<String, CompletableFuture<T>> id2Value,
         BiFunction<T, T, T> merge
 ) {
-    public static IEventTc<Object> jsonEventIc(Function<String, CompletableFuture<Object>> id2Value) {
+    public static IEventTc<Object> jsonEventTC(Function<String, CompletableFuture<Object>> id2Value) {
         return new IEventTc<Object>(
                 ILensTC.jsonLensTc,
                 j -> j,

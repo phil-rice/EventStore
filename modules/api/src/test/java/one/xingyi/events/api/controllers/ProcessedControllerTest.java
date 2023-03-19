@@ -3,6 +3,7 @@ package one.xingyi.events.api.controllers;
 import one.xingyi.event.audit.AndAudit;
 import one.xingyi.event.audit.Audit;
 import one.xingyi.event.jslt.Jslt;
+import one.xingyi.event.postprocessor.IPostProcessor;
 import one.xingyi.events.eventStore.IEventStore;
 import one.xingyi.events.eventStore.MapEventStore;
 import one.xingyi.events.events.IEvent;
@@ -41,7 +42,7 @@ class ProcessedControllerTest {
     void setup() {
         eventStore = new MapEventStore();
         idAndValue = new IdAndValueMemoryStore();
-        controller = new ProcessedController(idAndValue, eventStore, new Jslt());
+        controller = new ProcessedController(idAndValue, eventStore, IPostProcessor.defaultPostProcessor(IIdAndValueStore.getJsonString(idAndValue), new Jslt()));
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 

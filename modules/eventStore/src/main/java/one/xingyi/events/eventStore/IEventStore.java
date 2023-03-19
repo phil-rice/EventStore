@@ -3,10 +3,7 @@ package one.xingyi.events.eventStore;
 import one.xingyi.event.audit.AndAudit;
 import one.xingyi.events.events.IEvent;
 import one.xingyi.events.utils.functions.PartialAnd;
-import one.xingyi.events.utils.helpers.AsyncHelper;
-import one.xingyi.events.utils.helpers.ListHelper;
-import one.xingyi.events.utils.helpers.MapHelper;
-import one.xingyi.events.utils.helpers.NullHelper;
+import one.xingyi.events.utils.helpers.*;
 import one.xingyi.events.utils.tuples.Tuple3;
 
 import java.util.Arrays;
@@ -14,11 +11,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 public interface IEventStore {
     /**
      * Note that this is name -> namespace -> events... because that way all the things about the name are close together
      */
+
+    static CompletableFuture<Map<String, Map<String, List<AndAudit<IEvent>>>>> getAll(IEventStore eventStore, String nameSpaces, String names) {
+        final Function<String, List<String>> splitter = StringHelper.split(",");
+        var nsList = splitter.apply(nameSpaces);
+        var nameList = splitter.apply(names);
+        return IEventStore.getAll(eventStore, nsList, nameList);
+
+    }
+
     static CompletableFuture<Map<String, Map<String, List<AndAudit<IEvent>>>>> getAll(IEventStore eventStore, List<String> nameSpaces, List<String> names) {
         Map<String, Map<String, List<AndAudit<IEvent>>>> map = new HashMap<>(names.size() * nameSpaces.size());
         return AsyncHelper.toFutureOfList(

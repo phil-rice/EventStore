@@ -1,0 +1,21 @@
+{
+  "template":    "springboot",
+  "name":        "postprocessor",
+  "description": "Post processes the results of evaluating events",
+  "mvn":         {
+    "project": {
+      "dependencies": {
+        "dependency": [
+
+        ]
+      }
+    }
+  },
+  "links":       ["utils", "idValueStore"],
+  "guards":      {
+    "mvn":     true,
+    "compile": true,
+    "publish": false,
+    "test":    true
+  }
+}
