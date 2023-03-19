@@ -6,13 +6,14 @@ import one.xingyi.events.optics.lens.ILensTC;
 import one.xingyi.events.optics.lens.LensDefn;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 public class LensEventValueProcessor<T> extends AbstractEventValueProcessor<LensEvent, T> {
 
     final private ILensTC<T> lensTC;
-    final private FunctionWithException<Object, T, Exception> parser;
+    final private Function<Object, T> parser;
 
-    public LensEventValueProcessor(ILensTC<T> lensTC, FunctionWithException<Object, T, Exception> parser) {
+    public LensEventValueProcessor(ILensTC<T> lensTC, Function<Object, T> parser) {
         super(LensEvent.class);
         this.lensTC = lensTC;
         this.parser = parser;

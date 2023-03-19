@@ -31,9 +31,7 @@ public class ProcessedController {
     private final IEventStore eventStore;
 
 
-    public ProcessedController(@Autowired IIdAndValueStore idAndValueStore,
-                               @Autowired IEventStore eventStore,
-                               @Autowired IPostProcessor postProcessor) {
+    public ProcessedController(@Autowired IIdAndValueStore idAndValueStore, @Autowired IEventStore eventStore, @Autowired IPostProcessor postProcessor) {
         this.idAndValueStore = idAndValueStore;
         this.eventStore = eventStore;
         this.postProcessor = postProcessor;
@@ -41,28 +39,21 @@ public class ProcessedController {
 
     final private IPostProcessor postProcessor;
 
-    CompletableFuture<Object> id2Value(String id) {
-        return IIdAndValueStore.getJsonString(idAndValueStore).apply(id).thenApply(wrapFn(json -> JsonHelper.mapper.readValue(json, Map.class)));
+    CompletableFuture<byte[]> id2Value(String id) {
+        return IIdAndValueStore.getJsonBytes(idAndValueStore).apply(id);
     }
 
 
     @GetMapping(value = "/processed/{namespaces}/{names}/details", produces = "application/json")
     public CompletableFuture<byte[]> getProcessedEventDetails(@PathVariable String namespaces, @PathVariable String names, @RequestParam(required = false) String processor, @RequestParam(required = false) Boolean trim) {
-        return IEventStore.getAll(eventStore, namespaces, names)
-                .thenCompose(nsToNameToEvents -> MapHelper.map2K(nsToNameToEvents, evaluateEvents(processor, trim))
-                        .thenCompose(j -> postProcessor.postProcess(processor, j)));
+        return IEventStore.getAll(eventStore, namespaces, names).thenCompose(nsToNameToEvents -> MapHelper.map2K(nsToNameToEvents, evaluateEvents(processor, trim)).thenCompose(j -> postProcessor.postProcess(processor, j)));
 
     }
 
 
     @GetMapping(value = "/processed/{namespaces}/{names}", produces = "application/json")
-    public CompletableFuture<byte[]> getProcessedEvents(@PathVariable String namespaces, @PathVariable String names,
-                                                        @RequestParam(required = false) String processor,
-                                                        @RequestParam(required = false) Boolean trim,
-                                                        @RequestParam(required = false) String postProcess) {
-        return IEventStore.getAll(eventStore, namespaces, names)
-                .thenCompose(nsToNameToEvents -> MapHelper.map2K(nsToNameToEvents, evaluateEvents(processor, trim))
-                        .thenCompose(es -> postProcessor.postProcess(postProcess, combineValues(es))));
+    public CompletableFuture<byte[]> getProcessedEvents(@PathVariable String namespaces, @PathVariable String names, @RequestParam(required = false) String processor, @RequestParam(required = false) Boolean trim, @RequestParam(required = false) String postProcess) {
+        return IEventStore.getAll(eventStore, namespaces, names).thenCompose(nsToNameToEvents -> MapHelper.map2K(nsToNameToEvents, evaluateEvents(processor, trim)).thenCompose(es -> postProcessor.postProcess(postProcess, combineValues(es))));
     }
 
     private static Map<String, Object> combineValues(Map<String, Map<String, Object>> es) {

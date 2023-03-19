@@ -4,7 +4,9 @@ import one.xingyi.event.audit.AndAudit;
 import one.xingyi.event.audit.AndVersionIdAndAudit;
 import one.xingyi.event.audit.Audit;
 import one.xingyi.events.events.*;
+import one.xingyi.events.utils.helpers.JsonHelper;
 
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -50,8 +52,9 @@ public interface EventProcessorFixture {
     List<AndVersionIdAndAudit<IEvent>> evVIA01234 = List.of(evVIA0, evVIA1, evVIA2, evVIA3, evVIA4);
 
 
-    static Function<String, CompletableFuture<Object>> idToValueForTest = s -> {
-        if (s.equals("id3")) return CompletableFuture.completedFuture(value(3));
+    static Function<String, CompletableFuture<byte[]>> idToValueForTest = s -> {
+        if (s.equals("id3"))
+            return CompletableFuture.completedFuture(JsonHelper.printJson(value(3)).getBytes(StandardCharsets.UTF_8));
         throw new RuntimeException("Unknown id " + s);
     };
 

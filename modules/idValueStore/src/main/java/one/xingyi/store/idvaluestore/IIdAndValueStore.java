@@ -1,9 +1,6 @@
 package one.xingyi.store.idvaluestore;
 
-import one.xingyi.events.utils.helpers.JsonHelper;
-
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -21,13 +18,19 @@ public interface IIdAndValueStore {
     CompletableFuture<PutResult> put(ValueAndMetadata valueAndMetadata);
 
     static Function<String, CompletableFuture<String>> getJsonString(IIdAndValueStore idAndValueStore) {
+        var getBytes = getJsonBytes(idAndValueStore);
+        return id -> getBytes.apply(id).thenApply(bytes -> new String(bytes, StandardCharsets.UTF_8));
+    }
+
+
+    static Function<String, CompletableFuture<byte[]>> getJsonBytes(IIdAndValueStore idAndValueStore) {
         return id -> {
             return idAndValueStore.get(id).thenApply(wrapFn(vm -> {
                 if (vm == null) return null;
                 var metadata = vm.metadata();
                 if (!metadata.contentType().equals("application/json"))
                     throw new RuntimeException("Cannot handle content type " + metadata.contentType());
-                return new String(vm.value(), StandardCharsets.UTF_8);
+                return vm.value();
             }));
         };
     }

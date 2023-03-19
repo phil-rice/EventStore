@@ -29,17 +29,17 @@ public interface IEventProcessor<E, T> {
         return ListHelper.takeFrom(list, index);
     }
 
-    static <T, E> CompletableFuture<T> evaluate(IEventProcessor<E, T> eventProcessor,Predicate<E> isSource, List<E> events, T zero) {
-        return AsyncHelper.foldLeft(eventsFromLastSource(events,isSource), zero, eventProcessor::apply);
+    static <T, E> CompletableFuture<T> evaluate(IEventProcessor<E, T> eventProcessor, Predicate<E> isSource, List<E> events, T zero) {
+        return AsyncHelper.foldLeft(eventsFromLastSource(events, isSource), zero, eventProcessor::apply);
     }
 
 
     static <T> IEventProcessor<IEvent, T> defaultEventProcessor(IEventTc<T> tc) {
         return combine(
-                new SetIdEventValueProcessor<>(tc.id2Value()),
-                new SetValueEventValueProcessor<>(tc.parser()),
+                new SetIdEventValueProcessor<>(tc.id2Value(), tc.byteArrayParser()),
+                new SetValueEventValueProcessor<>(tc.objectParser()),
                 new ZeroEventValueProcessor<>(tc.zero()),
-                new LensEventValueProcessor<>(tc.lensTC(), tc.parser())
+                new LensEventValueProcessor<>(tc.lensTC(), tc.objectParser())
         );
     }
 

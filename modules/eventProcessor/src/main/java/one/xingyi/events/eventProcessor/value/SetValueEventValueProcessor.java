@@ -4,15 +4,16 @@ import one.xingyi.events.events.SetValueEvent;
 import one.xingyi.events.utils.interfaces.FunctionWithException;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 public class SetValueEventValueProcessor<T> extends AbstractEventValueProcessor<SetValueEvent, T> {
 
     /**
      * The object is the json in the event
      */
-    private FunctionWithException<Object, T, Exception> parser;
+    private Function<Object, T> parser;
 
-    public SetValueEventValueProcessor(FunctionWithException<Object, T, Exception> parser) {
+    public SetValueEventValueProcessor(Function<Object, T> parser) {
         super(SetValueEvent.class);
         this.parser = parser;
     }
