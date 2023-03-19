@@ -1,7 +1,8 @@
 package one.xingyi.events.api.controllers;
 
-import one.xingyi.audit.AndAudit;
-import one.xingyi.audit.Audit;
+import com.schibsted.spt.data.jslt.Expression;
+import one.xingyi.event.audit.AndAudit;
+import one.xingyi.event.audit.Audit;
 import one.xingyi.events.eventProcessor.IEventProcessor;
 import one.xingyi.events.eventProcessor.IEventTc;
 import one.xingyi.events.eventStore.IEventStore;
@@ -11,6 +12,7 @@ import one.xingyi.events.utils.helpers.JsonHelper;
 import one.xingyi.events.utils.helpers.ListHelper;
 import one.xingyi.events.utils.helpers.MapHelper;
 import one.xingyi.events.utils.helpers.StringHelper;
+import one.xingyi.events.utils.jsontransform.IJsonTransform;
 import one.xingyi.store.idvaluestore.IIdAndValueStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,12 +35,15 @@ public class ProcessedController {
     private final IEventStore eventStore;
 
 
-    public ProcessedController(@Autowired IIdAndValueStore idAndValueStore, @Autowired IEventStore eventStore) {
+    public ProcessedController(@Autowired IIdAndValueStore idAndValueStore, @Autowired IEventStore eventStore, @Autowired IJsonTransform<Expression> jslt) {
         this.idAndValueStore = idAndValueStore;
         this.eventStore = eventStore;
+        this.jslt = jslt;
     }
 
     final private Function<String, List<String>> splitter = StringHelper.split(",");
+
+    final private IJsonTransform<Expression> jslt;
 
     CompletableFuture<Object> id2Value(String id) {
         return idAndValueStore.get(id).thenApply(wrapFn(vm -> {
@@ -83,16 +88,37 @@ public class ProcessedController {
         return trim == null || trim ? (e -> e.payload().isSource()) : (e -> false);
     }
 
+    Function<Object, CompletableFuture<String>> postProcess(String postProcess) {
+        if ("value".equals(postProcess) || postProcess == null)
+            return s -> CompletableFuture.completedFuture(JsonHelper.printJson(s));
+        if (postProcess.startsWith("transform:")) {
+            return s -> {
+                var txid = postProcess.substring("transform:".length());
+                return idAndValueStore.get(txid).thenApply(defn -> {
+                    if (!defn.metadata().contentType().equals("application/json"))
+                        throw new RuntimeException("Cannot handle defn content type " + defn.metadata().contentType() + " for id " + txid);
+                    var compiled = jslt.compile(new String(defn.value(), StandardCharsets.UTF_8));
+                    return jslt.transform(compiled, JsonHelper.mapper.valueToTree(s)).toPrettyString();
+                });
+            };
+        }
+        throw new RuntimeException("Unknown post process " + postProcess);
+    }
 
     @GetMapping(value = "/processed/{namespaces}/{names}", produces = "application/json")
-    public CompletableFuture<String> getProcessedEvents(@PathVariable String namespaces, @PathVariable String names, @RequestParam(required = false) String processor, @RequestParam(required = false) Boolean trim) {
+    public CompletableFuture<String> getProcessedEvents(@PathVariable String namespaces, @PathVariable String names,
+                                                        @RequestParam(required = false) String processor,
+                                                        @RequestParam(required = false) Boolean trim,
+                                                        @RequestParam(required = false) String postProcess) {
         var nsList = splitter.apply(namespaces);
         var nameList = splitter.apply(names);
+        var postProcessFn = postProcess(postProcess);
         return IEventStore.getAll(eventStore, nsList, nameList)
-                .thenCompose(map -> MapHelper.<String, String, List<AndAudit<IEvent>>, Object>map2K(map,
-                                es -> IEventProcessor.<Object, AndAudit<IEvent>>evaluate(getEventProcessor(processor), trimPredicate(trim), es, null))
-                        .thenApply(es -> {
-                            return JsonHelper.printJson(MapHelper.map(es, ns2json -> ListHelper.foldLeft(ns2json.values(), null, JsonHelper::deepCombine)));
+                .thenCompose(map -> MapHelper.map2K(map,
+                                es -> IEventProcessor.evaluate(getEventProcessor(processor), trimPredicate(trim), es, null))
+                        .thenCompose(es -> {
+                            Map<String, Object> rawData = MapHelper.map(es, ns2json -> ListHelper.foldLeft(ns2json.values(), null, JsonHelper::deepCombine));
+                            return postProcessFn.apply(rawData);
                         }));
     }
 }

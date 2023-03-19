@@ -1,8 +1,8 @@
 package one.xingyi.events.eventFixture;
 
-import one.xingyi.audit.AndAudit;
-import one.xingyi.audit.AndVersionIdAndAudit;
-import one.xingyi.audit.Audit;
+import one.xingyi.event.audit.AndAudit;
+import one.xingyi.event.audit.AndVersionIdAndAudit;
+import one.xingyi.event.audit.Audit;
 import one.xingyi.events.events.*;
 
 import java.util.LinkedHashMap;

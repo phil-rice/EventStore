@@ -1,6 +1,6 @@
 package one.xingyi.idvaluestore;
 
-import one.xingyi.audit.Audit;
+import one.xingyi.event.audit.Audit;
 import one.xingyi.events.utils.exceptions.NotFoundException;
 import one.xingyi.events.utils.exceptions.WrappedException;
 import one.xingyi.events.utils.services.IHash;

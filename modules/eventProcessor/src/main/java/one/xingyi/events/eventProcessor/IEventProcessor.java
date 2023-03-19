@@ -1,7 +1,7 @@
 package one.xingyi.events.eventProcessor;
 
-import one.xingyi.audit.AndAudit;
-import one.xingyi.audit.Audit;
+import one.xingyi.event.audit.AndAudit;
+import one.xingyi.event.audit.Audit;
 import one.xingyi.events.eventProcessor.audit.EventAuditProcessor;
 import one.xingyi.events.eventProcessor.value.LensEventValueProcessor;
 import one.xingyi.events.eventProcessor.value.SetIdEventValueProcessor;

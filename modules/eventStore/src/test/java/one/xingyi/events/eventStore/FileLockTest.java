@@ -1,14 +1,13 @@
 package one.xingyi.events.eventStore;
 
-import one.xingyi.audit.AndAudit;
-import one.xingyi.audit.Audit;
+import one.xingyi.event.audit.AndAudit;
+import one.xingyi.event.audit.Audit;
 import one.xingyi.events.events.IEvent;
 import one.xingyi.events.events.SetValueEvent;
 import one.xingyi.events.utils.helpers.FilesHelper;
 import one.xingyi.events.utils.helpers.ListHelper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.webservices.server.WebServiceServerTest;
 
 import java.util.ArrayList;
 import java.util.HashSet;

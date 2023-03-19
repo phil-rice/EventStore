@@ -1,6 +1,6 @@
 package one.xingyi.events.api.controllers;
 
-import one.xingyi.audit.IWho;
+import one.xingyi.event.audit.IWho;
 import one.xingyi.events.eventStore.IEventStore;
 import one.xingyi.events.events.IEvent;
 import one.xingyi.events.utils.services.ITime;

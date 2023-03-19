@@ -1,4 +1,4 @@
-package one.xingyi.audit;
+package one.xingyi.event.audit;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;

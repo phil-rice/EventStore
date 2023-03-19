@@ -1,8 +1,8 @@
 package one.xingyi.events.eventStore;
 
-import one.xingyi.audit.AndAudit;
-import one.xingyi.audit.AndVersionIdAndAudit;
-import one.xingyi.audit.AuditIdVersionIso;
+import one.xingyi.event.audit.AndAudit;
+import one.xingyi.event.audit.AndVersionIdAndAudit;
+import one.xingyi.event.audit.AuditIdVersionIso;
 import one.xingyi.events.events.IEvent;
 import one.xingyi.events.optics.iso.IIso;
 import one.xingyi.events.utils.helpers.AsyncHelper;
@@ -12,12 +12,10 @@ import one.xingyi.events.utils.helpers.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class FileEventStore implements IEventStore {

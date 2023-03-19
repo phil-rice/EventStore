@@ -1,7 +1,6 @@
 package one.xingyi.events.eventStore;
 
-import one.xingyi.audit.AndAudit;
-import one.xingyi.audit.AndVersionIdAndAudit;
+import one.xingyi.event.audit.AndVersionIdAndAudit;
 import one.xingyi.events.events.IEvent;
 import one.xingyi.events.optics.iso.IIso;
 import org.junit.jupiter.api.Test;

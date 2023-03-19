@@ -1,0 +1,25 @@
+{
+  "template":    "springboot",
+  "name":        "jslt",
+  "description": "Implementation of the JSLT library - decouples us from the precise version",
+  "mvn":         {
+    "project": {
+      "dependencies": {
+        "dependency": [
+          {
+            "groupId":    "com.schibsted.spt.data",
+            "artifactId": "jslt",
+            "version":    "0.1.14"
+          }
+        ]
+      }
+    }
+  },
+  "links":       ["utils"],
+  "guards":      {
+    "mvn":     true,
+    "compile": true,
+    "publish": false,
+    "test":    true
+  }
+}

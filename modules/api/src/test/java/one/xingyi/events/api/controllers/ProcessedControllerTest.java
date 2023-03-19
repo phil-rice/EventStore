@@ -1,13 +1,15 @@
 package one.xingyi.events.api.controllers;
 
-import one.xingyi.audit.AndAudit;
-import one.xingyi.audit.Audit;
+import one.xingyi.event.audit.AndAudit;
+import one.xingyi.event.audit.Audit;
+import one.xingyi.event.jslt.Jslt;
 import one.xingyi.events.eventStore.IEventStore;
 import one.xingyi.events.eventStore.MapEventStore;
 import one.xingyi.events.events.IEvent;
 import one.xingyi.events.events.SetIdEvent;
 import one.xingyi.events.events.SetValueEvent;
 import one.xingyi.events.utils.helpers.JsonHelper;
+import one.xingyi.events.utils.helpers.StreamsHelper;
 import one.xingyi.store.idvaluestore.IIdAndValueStore;
 import one.xingyi.store.idvaluestore.IdAndValueMemoryStore;
 import one.xingyi.store.idvaluestore.Metadata;
@@ -39,7 +41,7 @@ class ProcessedControllerTest {
     void setup() {
         eventStore = new MapEventStore();
         idAndValue = new IdAndValueMemoryStore();
-        controller = new ProcessedController(idAndValue, eventStore);
+        controller = new ProcessedController(idAndValue, eventStore, new Jslt());
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
@@ -207,6 +209,19 @@ class ProcessedControllerTest {
 
     }
 
+
+    @Test
+    public void testWithJsltTransform() throws Exception {
+        eventStore.appendEvent("ns1", "name1", evA1).join();
+        var defn = StreamsHelper.mapFromClassPath(getClass(), "/jslt.defn", s -> s.getBytes(StandardCharsets.UTF_8));
+        var pr = idAndValue.put(new ValueAndMetadata(defn, new Metadata("json", "application/json", audit0))).join();
+
+        var expected = Map.of("newname", Map.of("a", 1, "b", 2));
+        MockMvcHelper.performAsync(mockMvc,
+                m -> m.perform(get("/processed/ns1,ns2,ns3/name1,name2?postProcess=transform:" + pr.id()).contentType("application/json")),
+                m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(expected))));
+
+    }
 
 }
 
