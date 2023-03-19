@@ -63,7 +63,7 @@ public class FileEventStore implements IEventStore {
     @Override
     public CompletableFuture<List<AndAudit<IEvent>>> getEvents(String nameSpace, String name) {
         String match = version + "\t" + name + "\t";
-        Predicate<String> filter = (String s) ->  s.startsWith(match);
+        Predicate<String> filter = (String s) -> s.startsWith(match);
         return AsyncHelper.wrapSupplier(executor, () -> {
             List<AndVersionIdAndAudit<IEvent>> lines = FilesHelper.collectLines(nameAndNameSpaceToFileName.apply(nameSpace, name), filter, iso::to);
             return ListHelper.map(lines, AndVersionIdAndAudit::toAndAudit);
@@ -72,9 +72,11 @@ public class FileEventStore implements IEventStore {
 
     @Override
     public CompletableFuture<Void> appendEvent(String nameSpace, String name, AndAudit<IEvent> eventAndAudit) {
-        String fileName = nameAndNameSpaceToFileName.apply(nameSpace, name);
-        logger.debug("Appending to file " + fileName + " event " + eventAndAudit);
-        var withVersionAndId = new AndVersionIdAndAudit<>(version, name, eventAndAudit.payload(), eventAndAudit.audit());
-        return AsyncHelper.wrapRunnable(executor, () -> FilesHelper.writeLineToFile(fileName, iso.from(withVersionAndId)));
+        return AsyncHelper.wrapRunnable(executor, () -> {
+            String fileName = nameAndNameSpaceToFileName.apply(nameSpace, name);
+//            logger.debug("Appending to file " + fileName + " event " + eventAndAudit);
+            var withVersionAndId = new AndVersionIdAndAudit<>(version, name, eventAndAudit.payload(), eventAndAudit.audit());
+            FilesHelper.writeLineToFile(fileName, iso.from(withVersionAndId));
+        });
     }
 }
