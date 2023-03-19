@@ -1,4 +1,5 @@
 package one.xingyi.events;
 
-public record SetValueEvent(String value, String parser) implements IEvent {
+/** The value is already a 'json' structure aka Map or List or null or String or Number or Boolean */
+public record SetValueEvent(Object value) implements IEvent {
 }

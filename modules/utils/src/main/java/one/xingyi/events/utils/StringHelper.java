@@ -41,6 +41,13 @@ public interface StringHelper {
         };
     }
 
+    static String to1Quote(String s){
+        return s.replace("\"", "'");
+    }
+    static String to2Quote(String s){
+        return s.replace("'", "\"");
+    }
+
     static String sha256(String s) {
         return wrapValue(() -> toHex(MessageDigest.getInstance("SHA-256").digest(s.getBytes())));
     }

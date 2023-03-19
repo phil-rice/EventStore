@@ -1,6 +1,6 @@
 package one.xingyi.eventProcessor;
 
-import one.xingyi.events.utils.BiFunctionWithException;
+import one.xingyi.events.utils.FunctionWithException;
 import one.xingyi.events.utils.JsonHelper;
 import one.xingyi.optics.lens.ILensTC;
 
@@ -10,15 +10,15 @@ import java.util.function.Function;
 
 public record IEventTc<T>(
         ILensTC<T> lensTC,
-        BiFunctionWithException<String, String, T, Exception> parser,
+        FunctionWithException<Object, T, Exception> parser,
         T zero,
         Function<String, CompletableFuture<T>> id2Value,
         BiFunction<T, T, T> merge
 ) {
-public     static IEventTc<Object> jsonEventIc(Function<String, CompletableFuture<Object>> id2Value) {
+    public static IEventTc<Object> jsonEventIc(Function<String, CompletableFuture<Object>> id2Value) {
         return new IEventTc<Object>(
                 ILensTC.jsonLensTc,
-                JsonHelper.toJsonParser,
+                j -> j,
                 null,
                 id2Value,
                 JsonHelper::deepCombine);

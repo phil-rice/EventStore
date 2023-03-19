@@ -1,12 +1,12 @@
 package one.xingyi.eventFixture;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import one.xingyi.audit.AndAudit;
 import one.xingyi.audit.Audit;
 import one.xingyi.events.*;
-import one.xingyi.events.utils.JsonHelper;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -20,14 +20,19 @@ public interface EventProcessorFixture {
 
     ZeroEvent zeroEvent = new ZeroEvent();
 
-    static String value(int a) {
-        return ("{'a':" + a + ",'b': " + (a + 1) + "}").replaceAll("'", "\"");
+    static Object value(int a) {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+        map.put("a", a);
+        map.put("b", a + 1);
+        return map;
+
+        //"("{'a':" + a + ",'b': " + (a + 1) + "}").replaceAll("'", "\"");
     }
 
-    SetValueEvent valueEvent1 = new SetValueEvent(value(1), "json");
-    SetValueEvent valueEvent2 = new SetValueEvent(value(2), "json");
+    SetValueEvent valueEvent1 = new SetValueEvent(value(1));
+    SetValueEvent valueEvent2 = new SetValueEvent(value(2));
     SetIdEvent idEvent3 = new SetIdEvent("id3", "json");
-    LensEvent lensEvent4 = new LensEvent("a", "44", "json");
+    LensEvent lensEvent4 = new LensEvent("a", 44);
     List<IEvent> events01234 = List.of(zeroEvent, valueEvent1, valueEvent2, idEvent3, lensEvent4);
 
     AndAudit<IEvent> evA0 = new AndAudit<IEvent>(zeroEvent, audit0);
@@ -38,12 +43,8 @@ public interface EventProcessorFixture {
     List<AndAudit<IEvent>> evA01234 = List.of(evA0, evA1, evA2, evA3, evA4);
 
 
-    static Function<String, CompletableFuture<Object>> idToValue = s -> {
-        try {
-            if (s.equals("id3")) return CompletableFuture.completedFuture(JsonHelper.parseJson(value(3)));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+    static Function<String, CompletableFuture<Object>> idToValueForTest = s -> {
+        if (s.equals("id3")) return CompletableFuture.completedFuture(value(3));
         throw new RuntimeException("Unknown id " + s);
     };
 

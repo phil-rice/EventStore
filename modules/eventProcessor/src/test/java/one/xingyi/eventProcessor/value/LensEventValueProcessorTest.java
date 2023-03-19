@@ -14,7 +14,7 @@ class LensEventValueProcessorTest {
 
     @Test
     public void testLensEventValueProcessor() throws ExecutionException, InterruptedException {
-        LensEventValueProcessor<Object> processor = new LensEventValueProcessor<>(ILensTC.jsonLensTc, JsonHelper.toJsonParser);
+        LensEventValueProcessor<Object> processor = new LensEventValueProcessor<>(ILensTC.jsonLensTc, e -> e);
         assertEquals(Map.of("a", 44), processor.apply(Map.of("a", 1), EventProcessorFixture.lensEvent4).get());
     }
 }

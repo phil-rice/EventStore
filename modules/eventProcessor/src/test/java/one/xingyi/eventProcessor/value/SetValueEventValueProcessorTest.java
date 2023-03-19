@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class SetValueEventValueProcessorTest {
     @Test
     public void testSetValueEventValueProcessor() throws ExecutionException, InterruptedException {
-        IEventProcessor<IEvent, Object> processor = new SetValueEventValueProcessor<>(JsonHelper.toJsonParser);
+        IEventProcessor<IEvent, Object> processor = new SetValueEventValueProcessor<>(e->e);
         assertEquals(Map.of("a", 1, "b", 2), processor.apply("anything", EventProcessorFixture.valueEvent1).get());
         assertEquals(Map.of("a", 2, "b", 3), processor.apply("anything", EventProcessorFixture.valueEvent2).get());
     }
