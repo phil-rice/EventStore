@@ -5,7 +5,9 @@ import one.xingyi.events.utils.interfaces.FunctionWithException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.prefs.Preferences;
 
 
 public interface ListHelper {
@@ -32,9 +34,19 @@ public interface ListHelper {
         return result;
     }
 
-    static <T, T1, E extends Exception> ArrayList<T1> map(List<T> list, FunctionWithException<T, T1, E> lineToT) throws E {
+    static <T, T1, E extends Exception> List<T1> map(List<T> list, FunctionWithException<T, T1, E> lineToT) throws E {
         var result = new ArrayList<T1>(list.size());
         for (T t : list) result.add(lineToT.apply(t));
+        return result;
+    }
+
+    static <T, T1, E extends Exception> List<T1> collect(List<T> list, Predicate<T> filter, FunctionWithException<T, T1, E> lineToT) throws E {
+        var result = new ArrayList<T1>(list.size());
+        for (T t : list)
+            if (filter.test(t)) {
+                T1 t1 = lineToT.apply(t);
+                if (t1 != null) result.add(t1);
+            }
         return result;
     }
 
@@ -42,5 +54,12 @@ public interface ListHelper {
         var result = new ArrayList<T1>(list.size());
         for (T t : list) result.addAll(lineToT.apply(t));
         return result;
+    }
+
+    static <T> List<T> filter(List<T> list, Predicate<T> predicate) {
+        var result = new ArrayList<T>(list.size());
+        for (T t : list) if (predicate.test(t)) result.add(t);
+        return result;
+
     }
 }

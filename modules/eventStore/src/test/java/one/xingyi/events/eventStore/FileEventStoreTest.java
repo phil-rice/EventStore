@@ -5,6 +5,7 @@ import one.xingyi.events.utils.helpers.ListHelper;
 import one.xingyi.events.utils.helpers.StringHelper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.FileSystemUtils;
 
@@ -12,57 +13,54 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static one.xingyi.events.eventFixture.EventProcessorFixture.evA01234;
 import static one.xingyi.events.eventFixture.EventProcessorFixture.evVIA01234;
+import static one.xingyi.events.utils.exceptions.WrappedException.wrapValue;
 import static one.xingyi.events.utils.helpers.StringHelper.to1Quote;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class FileEventStoreTest extends AbstractEventStoreTest {
+abstract class AbstractFileEventStoreTest extends AbstractEventStoreTest<FileEventStore> {
 
-    public final static String dir = makeTempDir();
+    public final String dir;
 
 
-    public static ExecutorService executor = Executors.newSingleThreadExecutor();
+    static ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    @AfterAll
-    public static void shutDownExecutor() {
-        executor.shutdown();
+
+    static String makeTempDir(String key) {
+        String dir = wrapValue(() -> File.createTempFile("fileStoreTest", key).getAbsolutePath());
+        FileSystemUtils.deleteRecursively(new File(dir));
+        return dir;
     }
 
-    protected FileEventStoreTest() {
-        super(new FileEventStore(executor, FileEventStore.nameAndNameSpaceToFileName(dir, File.separator, 2, 2, 2), FileEventStore.defaultIso));
-    }
-
-    private static String makeTempDir() {
-        try {
-            return File.createTempFile("test", "fileEventStore").getAbsolutePath();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @BeforeAll
-    static void cleanDirectory() throws IOException {
+    @BeforeEach
+    public void clear(){
         FileSystemUtils.deleteRecursively(new File(dir));
     }
 
-    @Test
-    public void testNameAndNameSpaceToFileName() {
-        assertEquals("path/of/root/dir/ns/8/2a/353/name.dat", FileEventStore.nameAndNameSpaceToFileName("path/of/root/dir", "/", 1, 2, 3).apply("ns", "name"));
+    protected AbstractFileEventStoreTest(String dir, FileEventStore store) throws IOException {
+        super(store);
+        this.dir = dir;
     }
 
+
     List<String> savedContent(String nameSpace, String name) throws IOException {
-        FileEventStore fileEventStore = (FileEventStore) eventStore;
-        var file = fileEventStore.nameAndNameSpaceToFileName.apply(nameSpace, name);
+
+        var file = eventStore.nameAndNameSpaceToFileName.apply(nameSpace, name);
         return ListHelper.map(Files.readAllLines(Paths.get(file)), StringHelper::to1Quote);
     }
 
     @Test
     public void testSerialisationOfEvents() throws IOException {
+
         String name = "name";
         AsyncHelper.forEach(evA01234, e -> eventStore.appendEvent(nameSpace, name, e)).join();
         var lines = savedContent(nameSpace, name);
@@ -72,8 +70,6 @@ class FileEventStoreTest extends AbstractEventStoreTest {
         assertEquals(to1Quote(FileEventStore.defaultIso.from(evVIA01234.get(3))), lines.get(3));
         assertEquals(to1Quote(FileEventStore.defaultIso.from(evVIA01234.get(4))), lines.get(4));
         assertEquals(5, lines.size());
-
     }
-
 
 }

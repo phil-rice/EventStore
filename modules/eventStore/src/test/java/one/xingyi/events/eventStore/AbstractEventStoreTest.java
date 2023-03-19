@@ -9,12 +9,12 @@ import java.util.Map;
 import static one.xingyi.events.eventFixture.EventProcessorFixture.evA01234;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public abstract class AbstractEventStoreTest {
+public abstract class AbstractEventStoreTest<ES extends IEventStore> {
 
-    public final IEventStore eventStore;
+    public final ES eventStore;
 
 
-    protected AbstractEventStoreTest(IEventStore eventStore) {
+    protected AbstractEventStoreTest(ES eventStore) {
         this.eventStore = eventStore;
     }
 

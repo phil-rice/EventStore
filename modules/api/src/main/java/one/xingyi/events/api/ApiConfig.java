@@ -30,7 +30,7 @@ public class ApiConfig {
 
     @Bean
     IEventStore store(@Value("${fileStore.directory}") String directory) {
-        return FileEventStore.store(executor, directory, File.separator, 2, 2, 2);
+        return FileEventStore.storeUniqueFiles(executor, directory, File.separator, 2, 2, 2);
     }
 
     @Bean
