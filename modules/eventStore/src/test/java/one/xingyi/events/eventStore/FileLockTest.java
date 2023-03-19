@@ -8,6 +8,7 @@ import one.xingyi.events.utils.helpers.FilesHelper;
 import one.xingyi.events.utils.helpers.ListHelper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.webservices.server.WebServiceServerTest;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -50,5 +51,24 @@ public class FileLockTest {
         Set<IEvent> actual = new HashSet<>(ListHelper.map(events, AndAudit::payload));
         assertEquals(expected, actual);
         assertTrue(FilesHelper.mutex.size() < 20); // there could be other threads around. But there should not be many
+    }
+
+    @Test
+    public void testWithDifferentFiles() {
+        var dir = AbstractFileEventStoreTest.makeTempDir("filelock");
+        var store = new FileEventStore(executor, (ns, n) -> dir + "/" + n.charAt(0) + "/data.dat", FileEventStore.defaultIso);
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+        Set<IEvent> expected = new HashSet<>();
+        for (int i = 0; i < 1000; i++) {
+            AndAudit<IEvent> eventAndAudit = event(i);
+            futures.add(store.appendEvent("ns", "name", eventAndAudit));
+            expected.add(eventAndAudit.payload());
+        }
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        var events = store.getEvents("ns", "name").join();
+        Set<IEvent> actual = new HashSet<>(ListHelper.map(events, AndAudit::payload));
+        assertEquals(expected, actual);
+        assertTrue(FilesHelper.mutex.size() < 20); // there could be other threads around. But there should not be many
+
     }
 }

@@ -44,6 +44,20 @@ class ProcessedControllerTest {
     }
 
     @Test
+    public void testNoEvents() throws Exception {
+        MockMvcHelper.performAsync(mockMvc,
+                m -> m.perform(get("/processed/ns/name")),
+                m -> m.andExpect(status().isOk()).andExpect(content().string("{\"name\":null}")));
+    }
+
+    @Test
+    public void testNoEventsForDetails() throws Exception {
+        MockMvcHelper.performAsync(mockMvc,
+                m -> m.perform(get("/processed/ns/name/details")),
+                m -> m.andExpect(status().isOk()).andExpect(content().string("{\"name\":{\"ns\":null}}")));
+    }
+
+    @Test
     public void testCanProcessValueEventDetails() throws Exception {
         eventStore.appendEvent("ns", "name", evA1).join();
         MockMvcHelper.performAsync(mockMvc,
@@ -129,12 +143,13 @@ class ProcessedControllerTest {
         eventStore.appendEvent("ns1", "name", evA0).join();
         eventStore.appendEvent("ns1", "name", evA1).join();
         var expectedWithTrim = Map.of("name", Map.of(
-                "ns1", List.of(audit0,audit1)));
+                "ns1", List.of(audit0, audit1)));
         MockMvcHelper.performAsync(mockMvc,
                 m -> m.perform(get("/processed/ns1/name/details?processor=audit&trim=false").contentType("application/json")),
                 m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(expectedWithTrim))));
     }
-@Test
+
+    @Test
     public void testTrimTrueValue() throws Exception {
         eventStore.appendEvent("ns1", "name", evA0).join();
         eventStore.appendEvent("ns1", "name", evA1).join();
