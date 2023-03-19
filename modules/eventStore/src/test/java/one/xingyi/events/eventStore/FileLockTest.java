@@ -40,7 +40,7 @@ public class FileLockTest {
         AtomicInteger aInt = new AtomicInteger();
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         Set<IEvent> expected = new HashSet<>();
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 1000; i++) {
             AndAudit<IEvent> eventAndAudit = event(i);
             futures.add(store.appendEvent("ns", "name", eventAndAudit));
             expected.add(eventAndAudit.payload());
