@@ -6,6 +6,7 @@ import one.xingyi.eventProcessor.IEventTc;
 import one.xingyi.eventStore.IEventStore;
 import one.xingyi.events.IEvent;
 import one.xingyi.events.utils.JsonHelper;
+import one.xingyi.events.utils.ListHelper;
 import one.xingyi.events.utils.MapHelper;
 import one.xingyi.events.utils.StringHelper;
 import one.xingyi.store.IIdAndValueStore;
@@ -20,6 +21,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
+import static one.xingyi.events.utils.JsonHelper.deepCombine;
 import static one.xingyi.events.utils.WrappedException.wrapFn;
 
 @RestController
@@ -46,16 +48,27 @@ public class ProcessedController {
         }));
     }
 
+    IEventTc<Object> tc = IEventTc.jsonEventIc(this::id2Value);
+    IEventProcessor<AndAudit<IEvent>, Object> eventProcessor = IEventProcessor.parentEventProcessor(IEventProcessor.defaultEventProcessor(tc), AndAudit::payload);
+
+    @GetMapping(value = "/processed/{namespaces}/{names}/details", produces = "application/json")
+    public CompletableFuture<String> getProcessedEventDetails(@PathVariable String namespaces, @PathVariable String names) {
+        var nsList = splitter.apply(namespaces);
+        var nameList = splitter.apply(names);
+        return IEventStore.getAll(eventStore, nsList, nameList)
+                .thenCompose(map -> MapHelper.<String, String, List<AndAudit<IEvent>>, Object>map2K(map,
+                                es -> IEventProcessor.<Object, AndAudit<IEvent>>evaluate(eventProcessor, e -> e.payload().isSource(), es, null))
+                        .thenApply(JsonHelper::printJson));
+
+    }
+
     @GetMapping(value = "/processed/{namespaces}/{names}", produces = "application/json")
     public CompletableFuture<String> getProcessedEvents(@PathVariable String namespaces, @PathVariable String names) {
         var nsList = splitter.apply(namespaces);
         var nameList = splitter.apply(names);
-        IEventTc<Object> tc = IEventTc.jsonEventIc(this::id2Value);
-        IEventProcessor<AndAudit<IEvent>, Object> eventProcessor = IEventProcessor.parentEventProcessor(IEventProcessor.defaultEventProcessor(tc), AndAudit::payload);
-        CompletableFuture<Map<String, Map<String, List<AndAudit<IEvent>>>>> result = IEventStore.getAll(eventStore, nsList, nameList);
-        return result.thenCompose(map -> MapHelper.<String, String, List<AndAudit<IEvent>>, Object>map2K(map,
-                        es -> IEventProcessor.<Object, AndAudit<IEvent>>evaluate(eventProcessor, e -> e.payload().isSource(), es, null))
-                .thenApply(res -> JsonHelper.printJson(res)));
-
+        return IEventStore.getAll(eventStore, nsList, nameList)
+                .thenCompose(map -> MapHelper.<String, String, List<AndAudit<IEvent>>, Object>map2K(map,
+                                es -> IEventProcessor.<Object, AndAudit<IEvent>>evaluate(eventProcessor, e -> e.payload().isSource(), es, null))
+                        .thenApply(es -> JsonHelper.printJson(MapHelper.map(es, ns2json -> ListHelper.foldLeft(ns2json.values(), null, JsonHelper::deepCombine)))));
     }
 }

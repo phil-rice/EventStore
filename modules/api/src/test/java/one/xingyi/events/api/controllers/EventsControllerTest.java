@@ -80,7 +80,7 @@ class EventsControllerTest {
 
         MockMvcHelper.performAsync(mockMvc,
                 m -> m.perform(get("/events/ns/name")),
-                m -> m.andExpect(status().isOk()).andExpect(content().string(expected)));
+                m -> m.andExpect(status().isOk()).andExpect(content().json(expected)));
 
     }
 

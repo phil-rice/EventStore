@@ -7,6 +7,7 @@ import one.xingyi.eventStore.MapEventStore;
 import one.xingyi.events.IEvent;
 import one.xingyi.events.LensEvent;
 import one.xingyi.events.SetIdEvent;
+import one.xingyi.events.SetValueEvent;
 import one.xingyi.events.utils.JsonHelper;
 import one.xingyi.store.IIdAndValueStore;
 import one.xingyi.store.IdAndValueMemoryStore;
@@ -46,45 +47,45 @@ class ProcessedControllerTest {
     }
 
     @Test
-    public void testCanProcessValueEvent() throws Exception {
+    public void testCanProcessValueEventDetails() throws Exception {
         eventStore.appendEvent("ns", "name", evA1).join();
         MockMvcHelper.performAsync(mockMvc,
-                m -> m.perform(get("/processed/ns/name").contentType("application/json")),
+                m -> m.perform(get("/processed/ns/name/details").contentType("application/json")),
                 m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 1, "b", 2)))))));
 
         eventStore.appendEvent("ns", "name", evA2).join();
         MockMvcHelper.performAsync(mockMvc,
-                m -> m.perform(get("/processed/ns/name").contentType("application/json")),
+                m -> m.perform(get("/processed/ns/name/details").contentType("application/json")),
                 m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 2, "b", 3)))))));
 
         eventStore.appendEvent("ns", "name", evA1).join();
         MockMvcHelper.performAsync(mockMvc,
-                m -> m.perform(get("/processed/ns/name").contentType("application/json")),
+                m -> m.perform(get("/processed/ns/name/details").contentType("application/json")),
                 m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 1, "b", 2)))))));
     }
 
     @Test
-    public void testCanProcessLensEvent() throws Exception {
+    public void testCanProcessLensEventDetails() throws Exception {
         eventStore.appendEvent("ns", "name", evA2).join();
         eventStore.appendEvent("ns", "name", evA4).join();
         MockMvcHelper.performAsync(mockMvc,
-                m -> m.perform(get("/processed/ns/name").contentType("application/json")),
+                m -> m.perform(get("/processed/ns/name/details").contentType("application/json")),
                 m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 44, "b", 3)))))));
     }
 
     @Test
-    public void testCanProcessZeroEvent() throws Exception {
+    public void testCanProcessDetailsZeroEventDetails() throws Exception {
         eventStore.appendEvent("ns", "name", evA0).join();
-        Map<String,Object> nsNull = new HashMap<>();
+        Map<String, Object> nsNull = new HashMap<>();
         nsNull.put("ns", null);
-        Map<String, Map<String, Object>> expected = Map.of("name",nsNull);
+        Map<String, Map<String, Object>> expected = Map.of("name", nsNull);
         MockMvcHelper.performAsync(mockMvc,
-                m -> m.perform(get("/processed/ns/name").contentType("application/json")),
+                m -> m.perform(get("/processed/ns/name/details").contentType("application/json")),
                 m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(expected))));
     }
 
     @Test
-    public void testCanProcessIdEvent() throws Exception {
+    public void testCanProcessDetailsForIdEventDetails() throws Exception {
         Audit audit = new Audit("user", 0, "test");
         var metadata = new Metadata("json", "application/json", audit);
         var pr = idAndValue.put(new ValueAndMetadata(
@@ -94,9 +95,45 @@ class ProcessedControllerTest {
         eventStore.appendEvent("ns", "name", ev).join();
 
         MockMvcHelper.performAsync(mockMvc,
-                m -> m.perform(get("/processed/ns/name").contentType("application/json")),
+                m -> m.perform(get("/processed/ns/name/details").contentType("application/json")),
                 m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(Map.of("name", Map.of("ns", Map.of("a", 1, "b", 2)))))));
     }
+
+    @Test
+    public void testCanProcessMultipleNameSpacesDetails() throws Exception {
+        var evForNs2 = new AndAudit<IEvent>(new SetValueEvent(Map.of("p", 1)), audit0);
+        var evForNs3 = new AndAudit<IEvent>(new SetValueEvent(Map.of("q", 1)), audit0);
+        eventStore.appendEvent("ns1", "name", evA1).join();
+        eventStore.appendEvent("ns2", "name", evForNs2).join();
+        eventStore.appendEvent("ns3", "name", evForNs3).join();
+        var expected = Map.of("name", Map.of(
+                "ns1", Map.of("a", 1, "b", 2),
+                "ns2", Map.of("p", 1),
+                "ns3", Map.of("q", 1)));
+        MockMvcHelper.performAsync(mockMvc,
+                m -> m.perform(get("/processed/ns1,ns2,ns3/name/details").contentType("application/json")),
+                m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(expected))));
+
+    }
+
+    @Test
+    public void testCanProcessMultipleNameSpaces() throws Exception {
+        var evForNs2 = new AndAudit<IEvent>(new SetValueEvent(Map.of("p", 1)), audit0);
+        var evForNs3 = new AndAudit<IEvent>(new SetValueEvent(Map.of("q", 1)), audit0);
+        eventStore.appendEvent("ns1", "name1", evA1).join();
+        eventStore.appendEvent("ns2", "name1", evForNs2).join();
+        eventStore.appendEvent("ns3", "name1", evForNs3).join();
+        eventStore.appendEvent("ns1", "name2", evA1).join();
+        eventStore.appendEvent("ns3", "name2", evForNs3).join();
+        var expected = Map.of(
+                "name1", Map.of("a", 1, "b", 2, "p", 1, "q", 1),
+                "name2", Map.of("a", 1, "b", 2, "q", 1));
+        MockMvcHelper.performAsync(mockMvc,
+                m -> m.perform(get("/processed/ns1,ns2,ns3/name1,name2").contentType("application/json")),
+                m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(expected))));
+
+    }
+
 
 }
 
