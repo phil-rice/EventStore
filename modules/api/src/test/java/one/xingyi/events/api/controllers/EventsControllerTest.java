@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static one.xingyi.eventFixture.EventProcessorFixture.valueEvent1;
 import static one.xingyi.eventFixture.EventProcessorFixture.zeroEvent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -62,6 +63,24 @@ class EventsControllerTest {
         MockMvcHelper.performAsync(mockMvc,
                 m -> m.perform(get("/events/ns/name")),
                 m -> m.andExpect(status().isOk()).andExpect(content().json(expected)));
+
+    }
+
+    @Test
+    public void testValueEvents() throws Exception {
+        MockMvcHelper.performAsync(mockMvc,
+                m -> m.perform(post("/events/ns/name").contentType("application/json").content(JsonHelper.printJson(valueEvent1))),
+                m -> m.andExpect(status().isOk()));
+
+        String expected = JsonHelper.printJson(
+                Map.of("name", Map.of("ns", List.of(
+                        Map.of("payload", Map.of("type", "value", "value", Map.of("a", 1, "b", 2)),
+                                "audit", Map.of("who", "anonymous", "when", 0, "what", "unknown"))
+                ))));
+
+        MockMvcHelper.performAsync(mockMvc,
+                m -> m.perform(get("/events/ns/name")),
+                m -> m.andExpect(status().isOk()).andExpect(content().string(expected)));
 
     }
 
