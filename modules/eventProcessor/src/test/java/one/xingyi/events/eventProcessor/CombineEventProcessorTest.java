@@ -1,6 +1,6 @@
 package one.xingyi.events.eventProcessor;
 
-import one.xingyi.events.IEvent;
+import one.xingyi.events.events.IEvent;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package one.xingyi.events.eventStore;
 
 import one.xingyi.audit.AndAudit;
-import one.xingyi.events.IEvent;
+import one.xingyi.events.events.IEvent;
 import one.xingyi.events.utils.helpers.AsyncHelper;
 import one.xingyi.events.utils.helpers.ListHelper;
 import one.xingyi.events.utils.helpers.MapHelper;

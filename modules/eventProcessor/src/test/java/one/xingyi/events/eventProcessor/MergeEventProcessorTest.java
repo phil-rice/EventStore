@@ -2,7 +2,7 @@ package one.xingyi.events.eventProcessor;
 
 import one.xingyi.audit.AndAudit;
 import one.xingyi.audit.Audit;
-import one.xingyi.events.IEvent;
+import one.xingyi.events.events.IEvent;
 import one.xingyi.events.optics.iso.IIso;
 import one.xingyi.events.utils.tuples.Tuple2;
 import org.junit.jupiter.api.Test;

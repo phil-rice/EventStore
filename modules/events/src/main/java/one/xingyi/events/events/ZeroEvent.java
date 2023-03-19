@@ -1,4 +1,4 @@
-package one.xingyi.events;
+package one.xingyi.events.events;
 
 public record ZeroEvent() implements IEvent {
 

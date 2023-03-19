@@ -2,11 +2,10 @@ package one.xingyi.events.eventFixture;
 
 import one.xingyi.audit.AndAudit;
 import one.xingyi.audit.Audit;
-import one.xingyi.events.*;
+import one.xingyi.events.events.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 

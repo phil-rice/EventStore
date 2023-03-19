@@ -1,6 +1,6 @@
 package one.xingyi.events.eventProcessor.value;
 
-import one.xingyi.events.SetValueEvent;
+import one.xingyi.events.events.SetValueEvent;
 import one.xingyi.events.utils.interfaces.FunctionWithException;
 
 import java.util.concurrent.CompletableFuture;

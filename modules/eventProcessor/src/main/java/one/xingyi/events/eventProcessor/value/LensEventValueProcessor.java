@@ -1,6 +1,6 @@
 package one.xingyi.events.eventProcessor.value;
 
-import one.xingyi.events.LensEvent;
+import one.xingyi.events.events.LensEvent;
 import one.xingyi.events.utils.interfaces.FunctionWithException;
 import one.xingyi.events.optics.lens.ILensTC;
 import one.xingyi.events.optics.lens.LensDefn;

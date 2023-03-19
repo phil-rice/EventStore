@@ -1,4 +1,4 @@
-package one.xingyi.events;
+package one.xingyi.events.events;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;

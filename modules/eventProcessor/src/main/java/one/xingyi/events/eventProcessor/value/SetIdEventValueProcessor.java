@@ -1,6 +1,6 @@
 package one.xingyi.events.eventProcessor.value;
 
-import one.xingyi.events.SetIdEvent;
+import one.xingyi.events.events.SetIdEvent;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;

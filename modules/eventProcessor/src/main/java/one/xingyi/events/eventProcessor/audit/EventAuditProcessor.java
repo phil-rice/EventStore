@@ -3,7 +3,7 @@ package one.xingyi.events.eventProcessor.audit;
 import one.xingyi.audit.AndAudit;
 import one.xingyi.audit.Audit;
 import one.xingyi.events.eventProcessor.IEventProcessor;
-import one.xingyi.events.IEvent;
+import one.xingyi.events.events.IEvent;
 import one.xingyi.events.utils.helpers.ListHelper;
 
 import java.util.ArrayList;

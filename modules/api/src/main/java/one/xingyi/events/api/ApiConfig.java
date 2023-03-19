@@ -5,6 +5,8 @@ import one.xingyi.audit.Who;
 import one.xingyi.events.eventStore.FileEventStore;
 import one.xingyi.events.eventStore.IEventStore;
 import one.xingyi.events.utils.services.IMimeHelper;
+import one.xingyi.events.utils.services.ITime;
+import one.xingyi.events.utils.services.Time;
 import one.xingyi.store.idvaluestore.IIdAndValueStore;
 import one.xingyi.store.idvaluestore.IdAndValueFileStore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +41,10 @@ public class ApiConfig {
     @Bean
     IWho who() {
         return new Who();
+    }
+
+    @Bean
+    ITime time() {
+        return new Time();
     }
 }
