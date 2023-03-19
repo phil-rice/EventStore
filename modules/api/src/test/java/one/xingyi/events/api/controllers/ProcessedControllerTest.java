@@ -117,6 +117,67 @@ class ProcessedControllerTest {
     }
 
     @Test
+    public void testTrimTrueAudit() throws Exception {
+        eventStore.appendEvent("ns1", "name", evA0).join();
+        eventStore.appendEvent("ns1", "name", evA1).join();
+        var expectedWithTrim = Map.of("name", Map.of(
+                "ns1", List.of(audit1)));
+        MockMvcHelper.performAsync(mockMvc,
+                m -> m.perform(get("/processed/ns1/name/details?processor=audit&trim=true").contentType("application/json")),
+                m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(expectedWithTrim))));
+    }
+
+    @Test
+    public void testTrimFalseAudit() throws Exception {
+        eventStore.appendEvent("ns1", "name", evA0).join();
+        eventStore.appendEvent("ns1", "name", evA1).join();
+        var expectedWithTrim = Map.of("name", Map.of(
+                "ns1", List.of(audit0,audit1)));
+        MockMvcHelper.performAsync(mockMvc,
+                m -> m.perform(get("/processed/ns1/name/details?processor=audit&trim=false").contentType("application/json")),
+                m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(expectedWithTrim))));
+    }
+@Test
+    public void testTrimTrueValue() throws Exception {
+        eventStore.appendEvent("ns1", "name", evA0).join();
+        eventStore.appendEvent("ns1", "name", evA1).join();
+        var expected = Map.of("name", Map.of(
+                "ns1", Map.of("a", 1, "b", 2)));
+        MockMvcHelper.performAsync(mockMvc,
+                m -> m.perform(get("/processed/ns1/name/details?processor=value&trim=true").contentType("application/json")),
+                m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(expected))));
+    }
+
+    @Test
+    public void testTrimFalseValue() throws Exception {
+        eventStore.appendEvent("ns1", "name", evA0).join();
+        eventStore.appendEvent("ns1", "name", evA1).join();
+        var expected = Map.of("name", Map.of(
+                "ns1", Map.of("a", 1, "b", 2)));
+        MockMvcHelper.performAsync(mockMvc,
+                m -> m.perform(get("/processed/ns1/name/details?processor=value&trim=false").contentType("application/json")),
+                m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(expected))));
+    }
+
+    @Test
+    public void testCanProcessMultipleNameSpacesDetailsForAudit() throws Exception {
+        var evForNs2 = new AndAudit<IEvent>(new SetValueEvent(Map.of("p", 1)), audit2);
+        var evForNs3 = new AndAudit<IEvent>(new SetValueEvent(Map.of("q", 1)), audit3);
+        eventStore.appendEvent("ns1", "name", evA0).join();
+        eventStore.appendEvent("ns1", "name", evA1).join();
+        eventStore.appendEvent("ns2", "name", evForNs2).join();
+        eventStore.appendEvent("ns3", "name", evForNs3).join();
+        var expected = Map.of("name", Map.of(
+                "ns1", List.of(audit0, audit1),
+                "ns2", List.of(audit2),
+                "ns3", List.of(audit3)));
+        MockMvcHelper.performAsync(mockMvc,
+                m -> m.perform(get("/processed/ns1,ns2,ns3/name/details?processor=audit&trim=false").contentType("application/json")),
+                m -> m.andExpect(status().isOk()).andExpect(content().json(JsonHelper.printJson(expected))));
+
+    }
+
+    @Test
     public void testCanProcessMultipleNameSpaces() throws Exception {
         var evForNs2 = new AndAudit<IEvent>(new SetValueEvent(Map.of("p", 1)), audit0);
         var evForNs3 = new AndAudit<IEvent>(new SetValueEvent(Map.of("q", 1)), audit0);

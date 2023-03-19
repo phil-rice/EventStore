@@ -25,7 +25,8 @@ public interface IEventProcessor<E, T> {
     CompletableFuture<T> apply(T value, E event);
 
     static <E> List<E> eventsFromLastSource(List<E> list, Predicate<E> isSource) {
-        return ListHelper.takeFrom(list, ListHelper.lastIndexOf(list, isSource));
+        int index = ListHelper.lastIndexOf(list, isSource);
+        return ListHelper.takeFrom(list, index);
     }
 
     static <T, E> CompletableFuture<T> evaluate(IEventProcessor<E, T> eventProcessor,Predicate<E> isSource, List<E> events, T zero) {
