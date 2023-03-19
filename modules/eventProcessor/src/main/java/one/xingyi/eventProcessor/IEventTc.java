@@ -1,7 +1,7 @@
 package one.xingyi.eventProcessor;
 
-import one.xingyi.events.utils.FunctionWithException;
-import one.xingyi.events.utils.JsonHelper;
+import one.xingyi.events.utils.interfaces.FunctionWithException;
+import one.xingyi.events.utils.helpers.JsonHelper;
 import one.xingyi.optics.lens.ILensTC;
 
 import java.util.concurrent.CompletableFuture;

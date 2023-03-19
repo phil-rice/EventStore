@@ -1,13 +1,9 @@
 package one.xingyi.eventProcessor.value;
 
-import one.xingyi.eventProcessor.IEventTc;
 import one.xingyi.events.SetValueEvent;
-import one.xingyi.events.utils.BiFunctionWithException;
-import one.xingyi.events.utils.FunctionWithException;
+import one.xingyi.events.utils.interfaces.FunctionWithException;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class SetValueEventValueProcessor<T> extends AbstractEventValueProcessor<SetValueEvent, T> {
 

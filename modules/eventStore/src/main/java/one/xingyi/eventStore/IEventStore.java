@@ -2,17 +2,16 @@ package one.xingyi.eventStore;
 
 import one.xingyi.audit.AndAudit;
 import one.xingyi.events.IEvent;
-import one.xingyi.events.utils.AsyncHelper;
-import one.xingyi.events.utils.ListHelper;
-import one.xingyi.events.utils.MapHelper;
-import one.xingyi.events.utils.NullHelper;
-import one.xingyi.events.utils.Tuple3;
+import one.xingyi.events.utils.helpers.AsyncHelper;
+import one.xingyi.events.utils.helpers.ListHelper;
+import one.xingyi.events.utils.helpers.MapHelper;
+import one.xingyi.events.utils.helpers.NullHelper;
+import one.xingyi.events.utils.tuples.Tuple3;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 public interface IEventStore {
     /**

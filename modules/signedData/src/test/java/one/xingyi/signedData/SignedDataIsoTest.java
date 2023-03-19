@@ -1,7 +1,7 @@
 package one.xingyi.signedData;
 
 import one.xingyi.optics.iso.IIso;
-import one.xingyi.events.utils.HashMismatchException;
+import one.xingyi.events.utils.services.HashMismatchException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

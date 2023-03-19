@@ -1,6 +1,7 @@
 package one.xingyi.store;
 
-import one.xingyi.events.utils.IHash;
+import one.xingyi.events.utils.exceptions.NotFoundException;
+import one.xingyi.events.utils.services.IHash;
 
 import java.util.HashMap;
 import java.util.Map;

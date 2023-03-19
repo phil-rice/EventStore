@@ -2,14 +2,14 @@ package one.xingyi.eventStore;
 
 import one.xingyi.audit.AndAudit;
 import one.xingyi.events.IEvent;
-import one.xingyi.events.utils.MapHelper;
+import one.xingyi.events.utils.helpers.MapHelper;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import static one.xingyi.events.utils.MapHelper.addToList2;
+import static one.xingyi.events.utils.helpers.MapHelper.addToList2;
 
 public class MapEventStore implements IEventStore {
     private final Map<String, Map<String, List<AndAudit<IEvent>>>> map = new HashMap<>();

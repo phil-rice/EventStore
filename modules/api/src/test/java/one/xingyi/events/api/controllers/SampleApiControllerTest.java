@@ -2,8 +2,7 @@ package one.xingyi.events.api.controllers;
 
 import one.xingyi.audit.Who;
 import one.xingyi.eventStore.MapEventStore;
-import one.xingyi.events.EventAndWhy;
-import one.xingyi.events.utils.JsonHelper;
+import one.xingyi.events.utils.helpers.JsonHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,8 +10,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static one.xingyi.eventFixture.EventProcessorFixture.valueEvent1;

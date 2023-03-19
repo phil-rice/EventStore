@@ -6,7 +6,7 @@ import one.xingyi.optics.iso.IIso;
 import org.junit.jupiter.api.Test;
 
 import static one.xingyi.eventFixture.EventProcessorFixture.*;
-import static one.xingyi.events.utils.StringHelper.to1Quote;
+import static one.xingyi.events.utils.helpers.StringHelper.to1Quote;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DefaultEventIsoTest {

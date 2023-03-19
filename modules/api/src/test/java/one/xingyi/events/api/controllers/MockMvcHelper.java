@@ -1,12 +1,9 @@
 package one.xingyi.events.api.controllers;
 
-import one.xingyi.events.utils.ConsumerWithException;
-import one.xingyi.events.utils.FunctionWithException;
+import one.xingyi.events.utils.interfaces.ConsumerWithException;
+import one.xingyi.events.utils.interfaces.FunctionWithException;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 

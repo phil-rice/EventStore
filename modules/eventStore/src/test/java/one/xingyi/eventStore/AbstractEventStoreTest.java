@@ -1,6 +1,6 @@
 package one.xingyi.eventStore;
 
-import one.xingyi.events.utils.AsyncHelper;
+import one.xingyi.events.utils.helpers.AsyncHelper;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

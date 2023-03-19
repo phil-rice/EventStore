@@ -1,8 +1,9 @@
 package one.xingyi.store;
 
 import one.xingyi.audit.Audit;
-import one.xingyi.events.utils.IHash;
-import one.xingyi.events.utils.WrappedException;
+import one.xingyi.events.utils.exceptions.NotFoundException;
+import one.xingyi.events.utils.exceptions.WrappedException;
+import one.xingyi.events.utils.services.IHash;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;

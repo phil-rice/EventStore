@@ -8,9 +8,9 @@ import one.xingyi.eventProcessor.value.SetIdEventValueProcessor;
 import one.xingyi.eventProcessor.value.SetValueEventValueProcessor;
 import one.xingyi.eventProcessor.value.ZeroEventValueProcessor;
 import one.xingyi.events.IEvent;
-import one.xingyi.events.utils.AsyncHelper;
-import one.xingyi.events.utils.ListHelper;
-import one.xingyi.events.utils.Tuple2;
+import one.xingyi.events.utils.helpers.AsyncHelper;
+import one.xingyi.events.utils.helpers.ListHelper;
+import one.xingyi.events.utils.tuples.Tuple2;
 import one.xingyi.optics.iso.IIso;
 
 import java.util.Arrays;
