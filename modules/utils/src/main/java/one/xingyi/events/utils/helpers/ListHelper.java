@@ -34,8 +34,8 @@ public interface ListHelper {
         return result;
     }
 
-    static <T, T1, E extends Exception> List<T1> map(List<T> list, FunctionWithException<T, T1, E> lineToT) throws E {
-        var result = new ArrayList<T1>(list.size());
+    static <T, T1, E extends Exception> List<T1> map(Iterable<T> list, FunctionWithException<T, T1, E> lineToT) throws E {
+        var result = new ArrayList<T1>();
         for (T t : list) result.add(lineToT.apply(t));
         return result;
     }

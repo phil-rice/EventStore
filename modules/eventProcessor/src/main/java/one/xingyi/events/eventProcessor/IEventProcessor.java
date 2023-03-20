@@ -14,6 +14,7 @@ import one.xingyi.events.utils.helpers.ListHelper;
 import one.xingyi.events.utils.tuples.Tuple2;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -29,8 +30,8 @@ public interface IEventProcessor<E, T> {
         return ListHelper.takeFrom(list, index);
     }
 
-    static <T, E> CompletableFuture<T> evaluate(IEventProcessor<E, T> eventProcessor, Predicate<E> isSource, List<E> events, T zero) {
-        return AsyncHelper.foldLeft(eventsFromLastSource(events, isSource), zero, eventProcessor::apply);
+    static <T, E> Function<List<E>, CompletableFuture<T>> evaluate(IEventProcessor<E, T> eventProcessor, Predicate<E> isSource, T zero) {
+        return events -> AsyncHelper.foldLeft(eventsFromLastSource(events, isSource), zero, eventProcessor::apply);
     }
 
 

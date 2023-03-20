@@ -4,12 +4,12 @@ import one.xingyi.events.utils.interfaces.FunctionWithException;
 
 import java.util.stream.Stream;
 
-class ComposeTraversal<M, C, G> implements ITraversal<M, G> {
+public class ComposeTraversal<M, C, G> implements ITraversal<M, G> {
 
-    final ITraversal<M, C> first;
-    final ITraversal<C, G> second;
+ public   final ITraversal<M, C> first;
+    public final ITraversal<C, G> second;
 
-    ComposeTraversal(ITraversal<M, C> first, ITraversal<C, G> second) {
+    public  ComposeTraversal(ITraversal<M, C> first, ITraversal<C, G> second) {
         this.first = first;
         this.second = second;
     }

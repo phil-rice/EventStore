@@ -1,5 +1,6 @@
 package one.xingyi.events.utils.helpers;
 
+import one.xingyi.events.utils.interfaces.FunctionWithException;
 import one.xingyi.events.utils.interfaces.RunnableWithException;
 import one.xingyi.events.utils.interfaces.SupplierWithException;
 import one.xingyi.events.utils.exceptions.WrappedException;
@@ -9,6 +10,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.StreamSupport;
 
 public interface AsyncHelper {
 
@@ -17,9 +19,14 @@ public interface AsyncHelper {
                 .thenApply(v -> futures.stream().map(CompletableFuture::join).toList());
     }
 
-    static <T> CompletableFuture<Void> forEach(List<T> list, Function<T, CompletableFuture<Void>> fn) {
-        var results = list.stream().map(fn).toList();
+    static <T> CompletableFuture<Void> forEach(Iterable<T> iterable, Function<T, CompletableFuture<Void>> fn) {
+        var results = StreamSupport.stream(iterable.spliterator(), false).map(fn).toList();
         return CompletableFuture.allOf(results.toArray(new CompletableFuture[0]));
+    }
+
+    static <T,T1> CompletableFuture<List<T1>> mapK(Iterable<T> iterable, Function<T, CompletableFuture<T1>> fn) {
+        var results = StreamSupport.stream(iterable.spliterator(), false).map(fn).toList();
+        return CompletableFuture.allOf(results.toArray(new CompletableFuture[0])).thenApply(v -> results.stream().map(CompletableFuture::join).toList());
     }
 
 

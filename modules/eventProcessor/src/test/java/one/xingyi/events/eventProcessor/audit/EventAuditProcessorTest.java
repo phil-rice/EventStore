@@ -13,13 +13,13 @@ class EventAuditProcessorTest {
 
     @Test
     public void testEventAuditProcessorOnlySinceLastSource() throws ExecutionException, InterruptedException {
-        var actual = IEventProcessor.evaluate(IEventProcessor.auditEventProcessor(), e -> e.payload().isSource(), EventProcessorFixture.evA01234, List.of());
-        assertEquals(EventProcessorFixture.audit01234.subList(3,5), actual.get());
+        var actual = IEventProcessor.evaluate(IEventProcessor.auditEventProcessor(), e -> e.payload().isSource(), List.of()).apply(EventProcessorFixture.evA01234);
+        assertEquals(EventProcessorFixture.audit01234.subList(3, 5), actual.get());
     }
 
     @Test
     public void testEventAuditProcessor() throws ExecutionException, InterruptedException {
-        var actual = IEventProcessor.evaluate(IEventProcessor.auditEventProcessor(), e -> false, EventProcessorFixture.evA01234, List.of());
+        var actual = IEventProcessor.evaluate(IEventProcessor.auditEventProcessor(), e -> false, List.of()).apply(EventProcessorFixture.evA01234 );
         assertEquals(EventProcessorFixture.audit01234, actual.get());
     }
 

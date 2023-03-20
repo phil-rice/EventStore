@@ -72,4 +72,10 @@ public interface MapHelper {
         return result;
     }
 
+
+    static <K, V> Map<K,V> fromEntries(Iterable<Map.Entry<K,V>> entries) {
+        Map<K,V> map = new HashMap<>();
+        entries.forEach(e -> map.put(e.getKey(), e.getValue()));
+        return map;
+    }
 }

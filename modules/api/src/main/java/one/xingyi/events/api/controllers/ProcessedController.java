@@ -61,7 +61,7 @@ public class ProcessedController {
     }
 
     private Function<List<AndAudit<IEvent>>, CompletableFuture<Object>> evaluateEvents(String processor, Boolean trim) {
-        return es -> IEventProcessor.evaluate(getEventProcessor(processor), trimPredicate(trim), es, null);
+        return es -> IEventProcessor.evaluate(getEventProcessor(processor), trimPredicate(trim), null).apply(es);
     }
 
     private static Predicate<AndAudit<IEvent>> trimPredicate(Boolean trim) {

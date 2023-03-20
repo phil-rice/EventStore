@@ -1,12 +1,9 @@
 package one.xingyi.events.optics.traversal;
 
 import one.xingyi.events.optics.lens.ILens;
-import one.xingyi.events.utils.helpers.ListHelper;
-import one.xingyi.events.utils.helpers.MapHelper;
 import one.xingyi.events.utils.interfaces.FunctionWithException;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 public interface ITraversal<M, C> {
@@ -27,16 +24,6 @@ public interface ITraversal<M, C> {
     <E extends Exception> FunctionWithException<M, M, E> replace(FunctionWithException<C, C, E> fn);
 
 
-    static <K, V> ITraversal<Map<K, V>, V> mapT() {
-        return new MapTraversal<>();
-    }
 
-    static <T> ITraversal<List<T>, T> listT() {
-        return new ListTraversal<>();
-    }
-
-    static <T> ITraversal<T, T> singleton() {
-        return new SingletonTraversal<>();
-    }
 }
 
