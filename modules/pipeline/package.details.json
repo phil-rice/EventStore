@@ -1,0 +1,20 @@
+{
+  "template":    "springboot",
+  "name":        "pipeline",
+  "description": "Processes events: effectively left folds them into a start value",
+  "mvn":         {
+    "project": {
+      "dependencies": {
+        "dependency": [
+        ]
+      }
+    }
+  },
+  "links":       ["eventProcessor", "eventFixture"],
+  "guards":      {
+    "mvn":     true,
+    "compile": true,
+    "publish": false,
+    "test":    true
+  }
+}

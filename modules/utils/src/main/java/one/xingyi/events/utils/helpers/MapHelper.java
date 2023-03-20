@@ -1,5 +1,8 @@
 package one.xingyi.events.utils.helpers;
 
+import one.xingyi.events.utils.interfaces.BiConsumerWithException;
+import one.xingyi.events.utils.interfaces.BiFunctionWithException;
+import one.xingyi.events.utils.interfaces.FunctionWithException;
 import one.xingyi.events.utils.tuples.Tuple3;
 
 import java.util.ArrayList;
@@ -7,16 +10,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public interface MapHelper {
 
     static <K1, K2, V1, V2> CompletableFuture<Map<K1, Map<K2, V2>>> map2K(Map<K1, Map<K2, V1>> map, Function<V1, CompletableFuture<V2>> fn) {
         Map<K1, Map<K2, V2>> result = new HashMap<>();
-        var x = AsyncHelper.toFutureOfList(map.entrySet().stream().flatMap(kv1 ->
-                kv1.getValue().entrySet().stream().map(kv2 ->
-                        fn.apply(kv2.getValue())
-                                .thenApply(v2 -> new Tuple3<>(kv1.getKey(), kv2.getKey(), v2)))).toList());
+        var x = AsyncHelper.toFutureOfList(map.entrySet().stream().flatMap(kv1 -> kv1.getValue().entrySet().stream().map(kv2 -> fn.apply(kv2.getValue()).thenApply(v2 -> new Tuple3<>(kv1.getKey(), kv2.getKey(), v2)))).toList());
         return x.thenAccept(list -> list.forEach(tuple -> put2(result, tuple.one(), tuple.two(), tuple.three()))).thenApply(willBeNull -> result);
     }
 
@@ -55,8 +56,19 @@ public interface MapHelper {
     }
 
     static <K, V, V1> Map<K, V1> map(Map<K, V> map, Function<V, V1> fn) {
-        Map<K, V1> result = new HashMap<>();
+        Map<K, V1> result = new HashMap<>(map.size());
         map.forEach((k, v) -> result.put(k, fn.apply(v)));
+        return result;
+    }
+
+    static <K, V, E extends Exception> void forEach(Map<K, V> map, BiConsumerWithException<K, V, E> fn) throws E {
+        for (Map.Entry<K, V> entry : map.entrySet())
+            fn.accept(entry.getKey(), entry.getValue());
+    }
+
+    static <K, V, V1, E extends Exception> Map<K, V1> mapE(Map<K, V> map, FunctionWithException<V, V1, E> fn) throws E {
+        Map<K, V1> result = new HashMap<>(map.size());
+        MapHelper.forEach(map, (k, v) -> result.put(k, fn.apply(v)));
         return result;
     }
 

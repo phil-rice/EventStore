@@ -19,6 +19,10 @@ public interface ILens<Main, Child> {
         return new Lens<>(m -> m, (m, m1) -> m1);
     }
 
+    static <K, V> ILens<K, V> jsonLens(String path) {
+        return (ILens) LensDefn.partLens(ILensTC.jsonLensTc, path);
+    }
+
 }
 
 record Lens<Main, Child>(Function<Main, Child> getter,
