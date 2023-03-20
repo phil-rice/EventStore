@@ -1,0 +1,1 @@
+Can be used to change json to different json. It's an optional post processing step in the event pipelines

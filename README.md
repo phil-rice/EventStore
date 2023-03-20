@@ -1,38 +1,50 @@
-A very abstract data store
+A very abstract data store that can be accessed through an api or directly from a java client without 
+needing a 'api' or anything other than access to the file system for reads. 
 
-# Id and Value
-There is a service that stores an arbitary string. The id is a url that
-includes the SHA of the value so this is 'content addressed' ensuring
-that we can trust the value that is returned is the one stored (as long as we check the sha)
+# Services
 
-# Names are namespace+name
-As it implies.
+* IdAndValue: Given an id give me the value. This is immutable and the id is the hash of the contents
+* NameAndEvents: The value for any given name mutates with time. These mutations are events. 
 
-# Name and value
-We are using the model of time which says a name's value can change across time.
-As we have an immutable store 'logically' the name 'points' to the current value. However, as we have an event store, 
-the name actually 'points' to the list of events that set or  modify the value
+# Concepts
+
+## Identity
+* Name: We have the idea of a 'name' which is the unique key for the thing we are talking about. 
+* Namespace: Often the data about a name is smeared across multiple name spaces. A namespace might be 'my banking data', 'data about my hobby', 'personal data' and so on
+
+## Values
+The value of an indentity changes across time. The value is a calculated property from events. To get the value
+we load the events and evaluate them
 
 ## Events
+Events mutate the previous value of that identity. 
+* SetValueEvent this ignores the previous value and replaces it with a fixed value (stored with the event)
+* SetIdEvent this ignores the previous value and replaces it with the value found from the given id in the id2Value store
+* ZeroEvent resets the value back to the 'empty' (often 'null')
+* LensEvent sets a part of the previous value to a new line.
 
-### SetValueEvent
-This ignores all the events that preceeds it and says 'this is the current value of a name
+Typically SetIdEvent or SetValueEvent will be used to set the 'whole value'. This could be used when the next value has little to do with the previous
+LensEvents are used to do thinks like 'add a value to a line', 'set the status to X' etc
 
-### SetIdEvent
-This ignores all the events that preceeds it and says 'this is the current id of a name'. The id can be turned into a value using the 
-id and value service
+## Audit
+Every event comes with an audit. Who, What and When. Then What is provided by the person creating the event
 
-### LensEvent
-This defines a lens that can be used to modify the value of a name. The lens is a function that allows us to modify only part of a value
-leaving the rest alone. This is great for things like 'add another line to a list of lines' or 'change some single property'. It 
-means that we don't need to store the whole new value object.
+# Id and Value
+This is a low level blob storage tool. The id is the hash of the content. The result is a byte[]
 
-The lens language allows us to select items like `a.b.c[3]` and also allows us to append items to a list `a.b.c[append]`
+# Usage patterns
 
-### ZeroEvent
-Ignore everything that has gone before and have an empty value.
+## Scripts / transformation
+A script or transformation can be set. It would normally use SetIdEvents as the values are 'more than one line long'. The
+actual value would be in the id2value store. As the script is mutated its new value is recorded
 
-# Data representation
-This data is stored as a string. The string could be any reasonable format. Json support is out of the box, but
-it is straightforwards to add support for other formats.
+## Double entry bookkeeping
+Each line can be added as LensEvent which would insert a new row into the data.
 
+## Edits of reference data
+The reference data (json) can be in the id2value store. The lensevent holds the small amount of data that has been changed
+While the original is not actually edited (it is immutable) the accessors will see the changed data
+
+
+Notes:
+Storing scripts/transforms requires the whole script to be stored and perhaps the change is simple... perhaps there is scope for a patch event?
