@@ -21,7 +21,8 @@ class LensTraversal<M, C, G> implements ITraversal<M, G> {
 
     @Override
     public <E extends Exception> FunctionWithException<M, M, E> replace(FunctionWithException<G, G, E> fn) {
-        return traversal.replace(c -> lens.set(c, fn.apply(lens.get(c))));
+        return m -> traversal.replace(c -> lens.set(c, fn.apply(lens.get(c)))).apply(m);
+
     }
 
 }
