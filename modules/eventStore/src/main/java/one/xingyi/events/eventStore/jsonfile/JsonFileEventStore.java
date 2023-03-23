@@ -5,11 +5,12 @@ import one.xingyi.event.audit.AndVersionIdAndAudit;
 import one.xingyi.event.audit.AuditIdVersionIso;
 import one.xingyi.events.eventStore.IEventStore;
 import one.xingyi.events.events.IEvent;
+import one.xingyi.events.fileStore.INameSpaceAndNameToFileName;
+import one.xingyi.events.fileStore.NameSpaceAndNameConfig;
 import one.xingyi.events.optics.iso.IIso;
 import one.xingyi.events.utils.helpers.AsyncHelper;
 import one.xingyi.events.utils.helpers.FilesHelper;
 import one.xingyi.events.utils.helpers.ListHelper;
-import one.xingyi.events.utils.helpers.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,31 +28,17 @@ public class JsonFileEventStore implements IEventStore {
     public final BiFunction<String, String, String> nameAndNameSpaceToFileName;
 
     public static JsonFileEventStore storeUniqueFiles(Executor executor, String dir, String separator, int... pattern) {
-        return new JsonFileEventStore(executor, JsonFileEventStore.nameAndNameSpaceToUniqueFileName(dir, separator, pattern), defaultIso);
+        return new JsonFileEventStore(executor, INameSpaceAndNameToFileName.uniqueFile(new NameSpaceAndNameConfig(dir, separator, "dat", pattern)), defaultIso);
     }
 
     public static JsonFileEventStore storeSharedFiles(Executor executor, String dir, String separator, int... pattern) {
-        return new JsonFileEventStore(executor, JsonFileEventStore.nameAndNameSpaceToUniqueFileName(dir, separator, pattern), defaultIso);
+        return new JsonFileEventStore(executor, INameSpaceAndNameToFileName.sharedFile(new NameSpaceAndNameConfig(dir, separator, "dat", pattern)), defaultIso);
     }
 
 
     public static IIso<String, AndVersionIdAndAudit<IEvent>> defaultIso = AuditIdVersionIso.iso(IIso.jsonIso(IEvent.class));
     private final IIso<String, AndVersionIdAndAudit<IEvent>> iso;
 
-
-    public static BiFunction<String, String, String> nameAndNameSpaceToUniqueFileName(String dir, String separator, int... pattern) {
-        var toDir = StringHelper.asDirectories(separator, pattern);
-        return (ns, n) -> String.join(separator, ListHelper.<String>filter(List.of(dir, ns, toDir.apply(StringHelper.sha256(n)), n), s -> s.length() > 0)) + ".dat";
-    }
-
-
-    public static BiFunction<String, String, String> nameAndNameSpaceToSharedFileName(String dir, String separator, int... pattern) {
-        var toFile = StringHelper.asDirectories(separator, pattern);
-        return (ns, n) -> {
-            String hash = StringHelper.sha256(n);
-            return String.join(separator, List.of(dir, ns, toFile.apply(hash))) + ".dat";
-        };
-    }
 
     public JsonFileEventStore(Executor executor, BiFunction<String, String, String> nameAndNameSpaceToFileName, IIso<String, AndVersionIdAndAudit<IEvent>> iso) {
         this.executor = executor;
@@ -75,7 +62,7 @@ public class JsonFileEventStore implements IEventStore {
             String fileName = nameAndNameSpaceToFileName.apply(nameSpace, name);
 //            logger.debug("Appending to file " + fileName + " event " + eventAndAudit);
             var withVersionAndId = new AndVersionIdAndAudit<>(version, name, eventAndAudit.payload(), eventAndAudit.audit());
-            FilesHelper.writeLineToFile(fileName, true,(iso.from(withVersionAndId )+"\n").getBytes());
+            FilesHelper.writeLineToFile(fileName, true, (iso.from(withVersionAndId) + "\n").getBytes());
         });
     }
 }

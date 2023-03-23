@@ -15,9 +15,5 @@ public class FileStoreTestOneFileTest extends AbstractJsonFileEventStoreTest {
         super(dir, new JsonFileEventStore(executor, (ns, n) -> dir + "/" + ns + "/data.dat", JsonFileEventStore.defaultIso));
     }
 
-    @Test
-    public void testNameAndNameSpaceToUniqueFileName() {
-        assertEquals("path/of/root/dir/ns/name.dat", JsonFileEventStore.nameAndNameSpaceToUniqueFileName("path/of/root/dir", "/").apply("ns", "name"));
-    }
 
 }
