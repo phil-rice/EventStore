@@ -9,7 +9,7 @@
       }
     }
   },
-  "links":       ["events", "eventFixture"],
+  "links":       ["events", "eventFixture", "fileStore"],
   "guards":      {
     "mvn":     true,
     "compile": true,

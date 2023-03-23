@@ -1,6 +1,7 @@
 package one.xingyi.events.eventStore;
 
 import one.xingyi.event.audit.AndVersionIdAndAudit;
+import one.xingyi.events.eventStore.jsonfile.JsonFileEventStore;
 import one.xingyi.events.events.IEvent;
 import one.xingyi.events.optics.iso.IIso;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DefaultEventIsoTest {
 
-    IIso<String, AndVersionIdAndAudit<IEvent>> iso = FileEventStore.defaultIso;
+    IIso<String, AndVersionIdAndAudit<IEvent>> iso = JsonFileEventStore.defaultIso;
 
     Object roundTrip(AndVersionIdAndAudit<IEvent> o) {
         return iso.to(iso.from(o));

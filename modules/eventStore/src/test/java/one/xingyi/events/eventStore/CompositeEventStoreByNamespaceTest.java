@@ -1,5 +1,6 @@
 package one.xingyi.events.eventStore;
 
+import one.xingyi.events.eventStore.store.MapEventStore;
 import one.xingyi.events.utils.functions.PartialAnd;
 import org.junit.jupiter.api.Test;
 

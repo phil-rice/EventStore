@@ -5,9 +5,7 @@ import one.xingyi.events.utils.interfaces.FunctionWithException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.prefs.Preferences;
 
 
 public interface ListHelper {
@@ -15,6 +13,11 @@ public interface ListHelper {
         Acc result = acc;
         for (V v : list) result = f.apply(result, v);
         return result;
+    }
+
+    static <T> int indexOf(List<T> list, Predicate<T> predicate) {
+        for (int i = 0; i < list.size(); i++) if (predicate.test(list.get(i))) return i;
+        return -1;
     }
 
     static <T> int lastIndexOf(List<T> list, Predicate<T> predicate) {

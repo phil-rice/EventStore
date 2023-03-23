@@ -1,8 +1,9 @@
-package one.xingyi.events.eventStore;
+package one.xingyi.events.eventStore.jsonfile;
 
 import one.xingyi.event.audit.AndAudit;
 import one.xingyi.event.audit.AndVersionIdAndAudit;
 import one.xingyi.event.audit.AuditIdVersionIso;
+import one.xingyi.events.eventStore.IEventStore;
 import one.xingyi.events.events.IEvent;
 import one.xingyi.events.optics.iso.IIso;
 import one.xingyi.events.utils.helpers.AsyncHelper;
@@ -18,19 +19,19 @@ import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-public class FileEventStore implements IEventStore {
+public class JsonFileEventStore implements IEventStore {
 
     static String version = "0";
-    static Logger logger = LoggerFactory.getLogger(FileEventStore.class);
+    static Logger logger = LoggerFactory.getLogger(JsonFileEventStore.class);
     private Executor executor;
     public final BiFunction<String, String, String> nameAndNameSpaceToFileName;
 
-    public static FileEventStore storeUniqueFiles(Executor executor, String dir, String separator, int... pattern) {
-        return new FileEventStore(executor, FileEventStore.nameAndNameSpaceToUniqueFileName(dir, separator, pattern), defaultIso);
+    public static JsonFileEventStore storeUniqueFiles(Executor executor, String dir, String separator, int... pattern) {
+        return new JsonFileEventStore(executor, JsonFileEventStore.nameAndNameSpaceToUniqueFileName(dir, separator, pattern), defaultIso);
     }
 
-    public static FileEventStore storeSharedFiles(Executor executor, String dir, String separator, int... pattern) {
-        return new FileEventStore(executor, FileEventStore.nameAndNameSpaceToUniqueFileName(dir, separator, pattern), defaultIso);
+    public static JsonFileEventStore storeSharedFiles(Executor executor, String dir, String separator, int... pattern) {
+        return new JsonFileEventStore(executor, JsonFileEventStore.nameAndNameSpaceToUniqueFileName(dir, separator, pattern), defaultIso);
     }
 
 
@@ -52,7 +53,7 @@ public class FileEventStore implements IEventStore {
         };
     }
 
-    public FileEventStore(Executor executor, BiFunction<String, String, String> nameAndNameSpaceToFileName, IIso<String, AndVersionIdAndAudit<IEvent>> iso) {
+    public JsonFileEventStore(Executor executor, BiFunction<String, String, String> nameAndNameSpaceToFileName, IIso<String, AndVersionIdAndAudit<IEvent>> iso) {
         this.executor = executor;
         this.nameAndNameSpaceToFileName = nameAndNameSpaceToFileName;
         this.iso = iso;
@@ -74,7 +75,7 @@ public class FileEventStore implements IEventStore {
             String fileName = nameAndNameSpaceToFileName.apply(nameSpace, name);
 //            logger.debug("Appending to file " + fileName + " event " + eventAndAudit);
             var withVersionAndId = new AndVersionIdAndAudit<>(version, name, eventAndAudit.payload(), eventAndAudit.audit());
-            FilesHelper.writeLineToFile(fileName, iso.from(withVersionAndId));
+            FilesHelper.writeLineToFile(fileName, true,(iso.from(withVersionAndId )+"\n").getBytes());
         });
     }
 }

@@ -5,7 +5,7 @@ import one.xingyi.event.audit.Audit;
 import one.xingyi.event.jslt.Jslt;
 import one.xingyi.event.postprocessor.IPostProcessor;
 import one.xingyi.events.eventStore.IEventStore;
-import one.xingyi.events.eventStore.MapEventStore;
+import one.xingyi.events.eventStore.store.MapEventStore;
 import one.xingyi.events.events.IEvent;
 import one.xingyi.events.events.SetIdEvent;
 import one.xingyi.events.events.SetValueEvent;

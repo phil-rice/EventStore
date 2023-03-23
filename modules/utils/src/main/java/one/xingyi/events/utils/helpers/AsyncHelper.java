@@ -14,6 +14,17 @@ import java.util.stream.StreamSupport;
 
 public interface AsyncHelper {
 
+    static CompletableFuture<Void> runAsync(Executor executor, RunnableWithException<Exception> runnable) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                runnable.run();
+                return null;
+            } catch (Exception e) {
+                throw WrappedException.wrap(e);
+            }
+        }, executor);
+    }
+
     static <T> CompletableFuture<List<T>> toFutureOfList(List<CompletableFuture<T>> futures) {
         return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
                 .thenApply(v -> futures.stream().map(CompletableFuture::join).toList());
@@ -24,7 +35,7 @@ public interface AsyncHelper {
         return CompletableFuture.allOf(results.toArray(new CompletableFuture[0]));
     }
 
-    static <T,T1> CompletableFuture<List<T1>> mapK(Iterable<T> iterable, Function<T, CompletableFuture<T1>> fn) {
+    static <T, T1> CompletableFuture<List<T1>> mapK(Iterable<T> iterable, Function<T, CompletableFuture<T1>> fn) {
         var results = StreamSupport.stream(iterable.spliterator(), false).map(fn).toList();
         return CompletableFuture.allOf(results.toArray(new CompletableFuture[0])).thenApply(v -> results.stream().map(CompletableFuture::join).toList());
     }

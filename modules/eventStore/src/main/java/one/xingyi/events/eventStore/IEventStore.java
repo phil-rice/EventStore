@@ -1,6 +1,7 @@
 package one.xingyi.events.eventStore;
 
 import one.xingyi.event.audit.AndAudit;
+import one.xingyi.events.eventStore.store.CompositeEventStoreByNamespace;
 import one.xingyi.events.events.IEvent;
 import one.xingyi.events.utils.functions.PartialAnd;
 import one.xingyi.events.utils.helpers.*;
@@ -13,12 +14,12 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
-public interface IEventStore {
+public interface IEventStore extends IGetFromEventStore,IAppendToEventStore {
     /**
      * Note that this is name -> namespace -> events... because that way all the things about the name are close together
      */
 
-    static CompletableFuture<Map<String, Map<String, List<AndAudit<IEvent>>>>> getAll(IEventStore eventStore, String nameSpaces, String names) {
+    static CompletableFuture<Map<String, Map<String, List<AndAudit<IEvent>>>>> getAll(IGetFromEventStore eventStore, String nameSpaces, String names) {
         final Function<String, List<String>> splitter = StringHelper.split(",");
         var nsList = splitter.apply(nameSpaces);
         var nameList = splitter.apply(names);
@@ -26,7 +27,7 @@ public interface IEventStore {
 
     }
 
-    static CompletableFuture<Map<String, Map<String, List<AndAudit<IEvent>>>>> getAll(IEventStore eventStore, List<String> nameSpaces, List<String> names) {
+    static CompletableFuture<Map<String, Map<String, List<AndAudit<IEvent>>>>> getAll(IGetFromEventStore eventStore, List<String> nameSpaces, List<String> names) {
         Map<String, Map<String, List<AndAudit<IEvent>>>> map = new HashMap<>(names.size() * nameSpaces.size());
         return AsyncHelper.toFutureOfList(
                         ListHelper.flatMap(names, name1 -> ListHelper.map(nameSpaces, ns1 ->
@@ -42,7 +43,6 @@ public interface IEventStore {
         return new CompositeEventStoreByNamespace(defaultEventStore, Arrays.asList(partials));
     }
 
-    CompletableFuture<List<AndAudit<IEvent>>> getEvents(String nameSpace, String name);
 
-    CompletableFuture<Void> appendEvent(String nameSpace, String name, AndAudit<IEvent> auditAndEvent);
+
 }

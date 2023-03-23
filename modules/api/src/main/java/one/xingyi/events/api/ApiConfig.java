@@ -4,8 +4,8 @@ import one.xingyi.event.audit.IWho;
 import one.xingyi.event.audit.Who;
 import one.xingyi.event.jslt.Jslt;
 import one.xingyi.event.postprocessor.IPostProcessor;
-import one.xingyi.events.eventStore.FileEventStore;
 import one.xingyi.events.eventStore.IEventStore;
+import one.xingyi.events.eventStore.jsonfile.JsonFileEventStore;
 import one.xingyi.events.utils.services.IMimeHelper;
 import one.xingyi.events.utils.services.ITime;
 import one.xingyi.events.utils.services.Time;
@@ -32,7 +32,7 @@ public class ApiConfig {
 
     @Bean
     IEventStore store(@Value("${fileStore.directory}") String directory) {
-        return FileEventStore.storeUniqueFiles(executor, directory, File.separator, 2, 2, 2);
+        return JsonFileEventStore.storeUniqueFiles(executor, directory, File.separator, 2, 2, 2);
     }
 
     @Bean

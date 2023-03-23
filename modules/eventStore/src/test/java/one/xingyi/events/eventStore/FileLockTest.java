@@ -2,6 +2,7 @@ package one.xingyi.events.eventStore;
 
 import one.xingyi.event.audit.AndAudit;
 import one.xingyi.event.audit.Audit;
+import one.xingyi.events.eventStore.jsonfile.JsonFileEventStore;
 import one.xingyi.events.events.IEvent;
 import one.xingyi.events.events.SetValueEvent;
 import one.xingyi.events.utils.helpers.FilesHelper;
@@ -35,8 +36,8 @@ public class FileLockTest {
 
     @Test
     public void test() {
-        var dir = AbstractFileEventStoreTest.makeTempDir("filelock");
-        var store = new FileEventStore(executor, (ns, n) -> dir + "/data.dat", FileEventStore.defaultIso);
+        var dir = AbstractJsonFileEventStoreTest.makeTempDir("filelock");
+        var store = new JsonFileEventStore(executor, (ns, n) -> dir + "/data.dat", JsonFileEventStore.defaultIso);
         AtomicInteger aInt = new AtomicInteger();
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         Set<IEvent> expected = new HashSet<>();
@@ -54,8 +55,8 @@ public class FileLockTest {
 
     @Test
     public void testWithDifferentFiles() {
-        var dir = AbstractFileEventStoreTest.makeTempDir("filelock");
-        var store = new FileEventStore(executor, (ns, n) -> dir + "/" + n.charAt(0) + "/data.dat", FileEventStore.defaultIso);
+        var dir = AbstractJsonFileEventStoreTest.makeTempDir("filelock");
+        var store = new JsonFileEventStore(executor, (ns, n) -> dir + "/" + n.charAt(0) + "/data.dat", JsonFileEventStore.defaultIso);
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         Set<IEvent> expected = new HashSet<>();
         for (int i = 0; i < 1000; i++) {

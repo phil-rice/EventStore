@@ -34,7 +34,7 @@ public interface MapHelper {
     }
 
 
-    static <K1, K2, V> List<V> get2(Map<K1, Map<K2, List<V>>> map, K1 k1, K2 k2) {
+    static <K1, K2, V> V get2(Map<K1, Map<K2, V>> map, K1 k1, K2 k2) {
         var m2 = map.get(k1);
         return m2 == null ? null : m2.get(k2);
     }
@@ -73,8 +73,8 @@ public interface MapHelper {
     }
 
 
-    static <K, V> Map<K,V> fromEntries(Iterable<Map.Entry<K,V>> entries) {
-        Map<K,V> map = new HashMap<>();
+    static <K, V> Map<K, V> fromEntries(Iterable<Map.Entry<K, V>> entries) {
+        Map<K, V> map = new HashMap<>();
         entries.forEach(e -> map.put(e.getKey(), e.getValue()));
         return map;
     }

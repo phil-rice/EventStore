@@ -1,7 +1,7 @@
 package one.xingyi.events.api.controllers;
 
 import one.xingyi.event.audit.Who;
-import one.xingyi.events.eventStore.MapEventStore;
+import one.xingyi.events.eventStore.store.MapEventStore;
 import one.xingyi.events.utils.helpers.JsonHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,7 @@
-package one.xingyi.events.eventStore;
+package one.xingyi.events.eventStore.store;
 
 import one.xingyi.event.audit.AndAudit;
+import one.xingyi.events.eventStore.IEventStore;
 import one.xingyi.events.events.IEvent;
 import one.xingyi.events.utils.functions.PartialAnd;
 
